@@ -1,0 +1,9 @@
+/.python-version
+/.idea
+**/.pytest_cache
+**/__pycache__
+*venv
+**.pyc
+**.DS_Store
+variables.sh
+settings.json
