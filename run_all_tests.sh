@@ -18,7 +18,7 @@ function runUnitTests {
 }
 
 function runLinuxUnitTests {
-  python3 -m pytest -s ${CURRENT_DIR}/test/unit
+  python3 -m pytest -s ${CURRENT_DIR}/tests/unit
   UNIT_TEST=$?
   if [[ ${UNIT_TEST} -ne 0 ]]; then
       echo -e "${RED}ERROR: Unit Tests Failed!!!${WHITE}"
@@ -27,7 +27,7 @@ function runLinuxUnitTests {
 }
 
 function runWindowsUnitTests {
-  python -m pytest -s ${CURRENT_DIR}/test/unit
+  python -m pytest -s ${CURRENT_DIR}/tests/unit
   UNIT_TEST=$?
   if [[ ${UNIT_TEST} -ne 0 ]]; then
       echo -e "${RED}ERROR: Unit Tests Failed!!!${WHITE}"
@@ -36,34 +36,37 @@ function runWindowsUnitTests {
 }
 
 function runIntegrationTests {
-    echo -e "${YELLOW}---------------Running Integration Tests---------------${WHITE}"
-    if [[ "$OSTYPE" == "msys" ]]; then
-      runWindowsIntegrationTests
-    else
-      runLinuxIntegrationTests
-    fi
-}
-
-function runWindowsIntegrationTests {
-  python -m pytest -s ${CURRENT_DIR}/test/integration
-  INTEGRATION_EXIT=$?
-  if [[ ${INTEGRATION_EXIT} -ne 0 ]]; then
-      echo -e "${RED}ERROR: Integration Tests Failed!!!${WHITE}"
-      exit 1
+  echo -e "${YELLOW}---------------Running Integration Tests---------------${WHITE}"
+  if [[ "$OSTYPE" == "msys" ]]; then
+    runWindowsIntegrationTests
+  else
+    runLinuxIntegrationTests
   fi
-  echo -e "${GREEN}---------------Integration Tests Passed---------------${WHITE}"
 }
 
 function runLinuxIntegrationTests {
-  python3 -m pytest -s ${CURRENT_DIR}/test/integration
-  INTEGRATION_EXIT=$?
-  if [[ ${INTEGRATION_EXIT} -ne 0 ]]; then
-      echo -e "${RED}ERROR: Integration Tests Failed!!!${WHITE}"
-      exit 1
+    if [ -d "${CURRENT_DIR}/test/integration" ]; then
+      python3 -m pytest -s ${CURRENT_DIR}/tests/integration
+      INTEGRATION_EXIT=$?
+      if [[ ${INTEGRATION_EXIT} -ne 0 ]]; then
+          echo -e "${RED}ERROR: Integration Tests Failed!!!${WHITE}"
+          exit 1
+      fi
+      echo -e "${GREEN}---------------Integration Tests Passed---------------${WHITE}"
   fi
-  echo -e "${GREEN}---------------Integration Tests Passed---------------${WHITE}"
 }
 
+function runWindowsIntegrationTests {
+  if [ -d "${CURRENT_DIR}/test/integration" ]; then
+    python -m pytest -s ${CURRENT_DIR}/tests/integration
+    INTEGRATION_EXIT=$?
+    if [[ ${INTEGRATION_EXIT} -ne 0 ]]; then
+        echo -e "${RED}ERROR: Integration Tests Failed!!!${WHITE}"
+        exit 1
+    fi
+    echo -e "${GREEN}---------------Integration Tests Passed---------------${WHITE}"
+  fi
+}
 
 function activateVirtualEnv {
   echo -e "${YELLOW}---------------Activating Virtual Environment---------------${WHITE}"
