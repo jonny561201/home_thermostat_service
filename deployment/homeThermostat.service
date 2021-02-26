@@ -1,0 +1,13 @@
+[Unit]
+Description=Home Automation Thermostat Service
+After=network.target
+
+[Service]
+EnvironmentFile=/home/pi/home_thermostat_service/serviceEnvVariables
+ExecStart=/home/pi/home_thermostat_service/venv/bin/python -u app.py
+WorkingDirectory=/home/pi/home_thermostat_service
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
