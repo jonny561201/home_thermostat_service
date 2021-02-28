@@ -25,17 +25,17 @@ def read_temperature_file():
 
 def turn_on_hvac(device):
      # if device == Automation.HVAC.AIR_CONDITIONING:
-     #     GPIO.output(AC_PIN, GPIO.LOW)
+     #     GPIO.output(AC_PIN, GPIO.HIGH)
      # else:
-     #     GPIO.output(FURNACE_PIN, GPIO.LOW)
-     # GPIO.output(BLOWER_PIN, GPIO.LOW)
+     #     GPIO.output(FURNACE_PIN, GPIO.HIGH)
+     # GPIO.output(BLOWER_PIN, GPIO.HIGH)
      pass
 
 
 def turn_off_hvac(device):
     # if device == Automation.HVAC.AIR_CONDITIONING:
-    #     GPIO.output(AC_PIN, GPIO.HIGH)
+    #     GPIO.output(AC_PIN, GPIO.LOW)
     # else:
-    #     GPIO.output(FURNACE_PIN, GPIO.HIGH)
-    # GPIO.output(BLOWER_PIN, GPIO.HIGH)
+    #     GPIO.output(FURNACE_PIN, GPIO.LOW)
+    # GPIO.output(BLOWER_PIN, GPIO.LOW)
     pass
