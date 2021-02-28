@@ -76,12 +76,7 @@ function createEnvironmentVariableFile {
 }
 
 function createFile {
-#    echo -e "Enter LIGHT_API_USERNAME:${WHITE}"
-#    read LIGHT_USER
-#    echo -e "Enter LIGHT_API_PASSWORD:${WHITE}"
-#    read LIGHT_PASS
-#
-#    echo "LIGHT_API_USERNAME=${LIGHT_USER}" > serviceEnvVariables
+    echo "TEMP_FILE_NAME=/home/pi/temperature_settings.json" > serviceEnvVariables
 #    echo "LIGHT_API_PASSWORD=${LIGHT_PASS}" >> serviceEnvVariables
 }
 
