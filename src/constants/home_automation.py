@@ -23,6 +23,8 @@ class Time:
     TWENTY_SECONDS = 20
     THIRTY_SECONDS = 30
     ONE_MINUTE = 60
+    TWO_MINUTE = 120
+    FIVE_MINUTE = 300
     TEN_MINUTE = 600
 
 

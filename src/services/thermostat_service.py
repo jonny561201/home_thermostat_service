@@ -16,4 +16,3 @@ def run_thermostat_program():
     else:
         gpio_utils.turn_off_hvac(Automation.HVAC.AIR_CONDITIONING)
         gpio_utils.turn_off_hvac(Automation.HVAC.FURNACE)
-
