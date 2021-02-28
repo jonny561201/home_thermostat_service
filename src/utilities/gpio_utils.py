@@ -3,9 +3,12 @@
 # TODO: find the correct pins to use
 from src.constants.home_automation import Automation
 
-AC_PIN = 23
-FURNACE_PIN = 26
-BLOWER_PIN = 14
+# third relay
+AC_PIN = 11
+# first relay
+BLOWER_PIN = 15
+# second relay
+FURNACE_PIN = 13
 
 
 # GPIO.cleanup()
