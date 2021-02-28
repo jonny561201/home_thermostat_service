@@ -4,7 +4,6 @@ from src.utilities.file_utils import get_desired_temp
 from src.utilities.user_temp_utils import get_user_temperature
 
 
-# TODO: do I need an HVAC state object or do I just always read the file...probably
 def run_thermostat_program():
     temp_file = gpio_utils.read_temperature_file()
     celsius_temp = get_user_temperature(temp_file, False)
