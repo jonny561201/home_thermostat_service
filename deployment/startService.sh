@@ -28,7 +28,7 @@ function startVirtualEnv {
       popd
     fi
       echo -e "${YELLOW}---------------starting VirtualEnv---------------${WHITE}"
-      source /home/pi/home_thermostat_servicee/venv/bin/activate
+      source /home/pi/home_thermostat_service/venv/bin/activate
 }
 
 function installDependencies {
