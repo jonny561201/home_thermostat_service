@@ -1,6 +1,8 @@
 # import RPi.GPIO as GPIO
 
 # TODO: find the correct pins to use
+from src.constants.home_automation import Automation
+
 AC_PIN = 23
 FURNACE_PIN = 26
 BLOWER_PIN = 14
@@ -19,7 +21,7 @@ def read_temperature_file():
 
 
 def turn_on_hvac(device):
-     # if device == 'ac':
+     # if device == Automation.HVAC.AIR_CONDITIONING:
      #     GPIO.output(AC_PIN, GPIO.LOW)
      # else:
      #     GPIO.output(FURNACE_PIN, GPIO.LOW)
@@ -28,7 +30,7 @@ def turn_on_hvac(device):
 
 
 def turn_off_hvac(device):
-    # if device == 'ac':
+    # if device == Automation.HVAC.AIR_CONDITIONING:
     #     GPIO.output(AC_PIN, GPIO.HIGH)
     # else:
     #     GPIO.output(FURNACE_PIN, GPIO.HIGH)
