@@ -76,8 +76,11 @@ function createEnvironmentVariableFile {
 }
 
 function createFile {
+    echo -e "Enter HUB_BASE_URL:${WHITE}"
+    read HUB_BASE_URL
+
     echo "TEMP_FILE_NAME=/home/pi/temperature_settings.json" > serviceEnvVariables
-#    echo "LIGHT_API_PASSWORD=${LIGHT_PASS}" >> serviceEnvVariables
+    echo "HUB_BASE_URL=${HUB_BASE_URL}" >> serviceEnvVariables
 }
 
 
