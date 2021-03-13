@@ -17,6 +17,8 @@ class TestLightService:
     TYPE = 'hvac'
     START = datetime.time()
     STOP = datetime.time()
+    START_TEMP = 20
+    STOP_TEMP = 16
     TASK_ID = str(uuid.uuid4())
 
     def setup_method(self):
@@ -60,20 +62,20 @@ class TestLightService:
         mock_state.get_instance.return_value.add_hvac_task.assert_not_called()
 
     def test_schedule_hvac_tasks__should_call_add_alarm(self, mock_tasks, mock_state):
-        light_pref = {'alarm_days': self.DAYS, 'task_type': self.TYPE, 'hvac_mode': self.MODE, 'hvac_start': self.START, 'hvac_stop': self.STOP, 'task_id': self.TASK_ID, 'enabled': True}
-        mock_tasks.return_value = [light_pref]
+        task = {'alarm_days': self.DAYS, 'task_type': self.TYPE, 'hvac_mode': self.MODE, 'hvac_start': self.START, 'hvac_stop': self.STOP, 'task_id': self.TASK_ID, 'enabled': True}
+        mock_tasks.return_value = [task]
         schedule_hvac_tasks()
 
-        mock_state.get_instance.return_value.add_hvac_task.assert_called_with(self.TASK_ID, self.DAYS, self.START, self.STOP)
+        mock_state.get_instance.return_value.add_hvac_task.assert_called_with(task)
 
     def test_schedule_hvac_tasks__should_call_remove_light_on_items_missing_from_api_response(self, mock_tasks, mock_state):
         other_task = str(uuid.uuid4())
         missing_task = str(uuid.uuid4())
         pref_one = {'alarm_days': self.DAYS, 'task_type': self.TYPE, 'hvac_mode': self.MODE, 'hvac_start': self.START, 'hvac_stop': self.STOP, 'task_id': self.TASK_ID, 'enabled': True}
         pref_two = {'alarm_days': self.DAYS, 'task_type': self.TYPE, 'hvac_mode': self.MODE, 'hvac_start': self.START, 'hvac_stop': self.STOP, 'task_id': other_task, 'enabled': True}
-        alarm_one = HvacState(self.TASK_ID, self.DAYS, self.START, self.STOP)
-        alarm_two = HvacState(other_task, self.DAYS, self.START, self.STOP)
-        alarm_three = HvacState(missing_task, self.DAYS, self.START, self.STOP)
+        alarm_one = HvacState(self.TASK_ID, self.DAYS, self.START, self.STOP, self.START_TEMP, self.STOP_TEMP)
+        alarm_two = HvacState(other_task, self.DAYS, self.START, self.STOP, self.START_TEMP, self.STOP_TEMP)
+        alarm_three = HvacState(missing_task, self.DAYS, self.START, self.STOP, self.START_TEMP, self.STOP_TEMP)
         mock_state.get_instance.return_value.SCHEDULED_TASKS = [alarm_one, alarm_two, alarm_three]
         mock_tasks.return_value = [pref_one, pref_two]
         schedule_hvac_tasks()
