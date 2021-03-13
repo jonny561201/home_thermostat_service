@@ -18,6 +18,10 @@ class Settings:
     def temp_file_name(self):
         return self.settings.get('TempFileName') if self.dev_mode else os.environ.get('TEMP_FILE_NAME')
 
+    @property
+    def hub_base_url(self):
+        return self.settings.get('HubBaseUrl') if self.dev_mode else os.environ.get('HUB_BASE_URL')
+
     @staticmethod
     def get_instance():
         if Settings.__instance is None:
