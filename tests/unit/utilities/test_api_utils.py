@@ -23,7 +23,7 @@ class TestLightApiRequests:
     def test_get_hvac_tasks_by_user__should_make_rest_call_using_url(self, mock_requests):
         get_hvac_tasks_by_user(self.USER_ID)
 
-        mock_requests.get.assert_called_with(f'{self.BASE_URL}/userId/{self.USER_ID}/tasks', timeout=5)
+        mock_requests.get.assert_called_with(f'{self.BASE_URL}/userId/{self.USER_ID}/tasks/hvac', timeout=5)
 
     def test_get_hvac_tasks_by_user__should_return_response(self, mock_requests):
         response = [{'alarm_light_group': '1', 'alarm_time': None}]
