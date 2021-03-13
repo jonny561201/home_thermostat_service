@@ -21,7 +21,7 @@ class TaskState:
         if not any(task.THREAD_ID == task_id for task in self.SCHEDULED_TASKS):
             logging.info(f'-----added new hvac task id: {task_id}-----')
             task_state = HvacState(task_id, days, start_time, stop_time)
-            task_state.ACTIVE_THREAD = create_thread(lambda: run_thermostat_program(task_state), Automation.TIME.TWO_MINUTE)
+            task_state.ACTIVE_THREAD = create_thread(lambda: run_thermostat_program(task_state), Automation.TIME.ONE_MINUTE)
             task_state.ACTIVE_THREAD.start()
             self.SCHEDULED_TASKS.append(task_state)
 

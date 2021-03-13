@@ -25,7 +25,7 @@ class TestLightState:
     def test_add_hvac_task__should_create_the_event_thread(self, mock_state, mock_thread):
         self.STATE.add_hvac_task(self.TASK_ID, self.DAYS, self.START_TIME, self.STOP_TIME)
 
-        mock_thread.assert_called_with(mock.ANY, Automation.TIME.TWO_MINUTE)
+        mock_thread.assert_called_with(mock.ANY, Automation.TIME.ONE_MINUTE)
         mock_state.assert_called()
 
     def test_add_hvac_task__should_store_the_thread_on_the_alarm_list(self, mock_thread):
