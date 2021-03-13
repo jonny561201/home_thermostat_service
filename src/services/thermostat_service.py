@@ -4,6 +4,12 @@ from src.utilities.file_utils import get_desired_temp
 from src.utilities.user_temp_utils import get_user_temperature
 
 
+# TODO: determine mode HEAT/COOL
+# TODO: when file mode is not none run normal program
+# TODO: when inside schedule event turn on when below desired temp (reverse cool)
+# TODO: when inside scheduled event turn off when at or above desired temp (reverse cool)
+# TODO: when outside scheduled event turn on when below desired temp (reverse cool)
+# TODO: when outside scheduled event turn off when above desired (reverse cool)
 def run_thermostat_program(event_state):
     temp_file = gpio_utils.read_temperature_file()
     celsius_temp = get_user_temperature(temp_file, False)
