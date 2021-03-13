@@ -8,7 +8,7 @@ logging.basicConfig(filename='thermostat.log', level=logging.INFO)
 
 try:
     logging.info('Application started!')
-    thread = create_thread(run_thermostat_program, Automation.TIME.TWO_MINUTE)
+    thread = create_thread(run_thermostat_program, Automation.TIME.ONE_MINUTE)
     thread.start()
 except Exception:
     logging.error('Application interrupted by user')

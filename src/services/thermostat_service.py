@@ -4,7 +4,7 @@ from src.utilities.file_utils import get_desired_temp
 from src.utilities.user_temp_utils import get_user_temperature
 
 
-def run_thermostat_program():
+def run_thermostat_program(event_state):
     temp_file = gpio_utils.read_temperature_file()
     celsius_temp = get_user_temperature(temp_file, False)
     state = get_desired_temp()
