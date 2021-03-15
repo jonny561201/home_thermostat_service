@@ -19,5 +19,5 @@ class HvacState(ThreadState):
         self.DAYS = days
         self.START_TEMP = start_temp
         self.STOP_TEMP = stop_temp
-        self.START_TIME = datetime.datetime.combine(datetime.date.today(), start).time()
-        self.STOP_TIME = datetime.datetime.combine(datetime.date.today(), stop).time()
+        self.START_TIME =start
+        self.STOP_TIME = stop
