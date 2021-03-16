@@ -26,4 +26,4 @@ class HvacState(ThreadState):
     # TODO: have the state object query the daily high temp (cache it and requery each day once when rolls over)
     # TODO: if the api comes throws save as None and requery
     def get_daily_high(self):
-        pass
+        return self.DAILY_TEMP
