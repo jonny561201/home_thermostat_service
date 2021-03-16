@@ -122,8 +122,8 @@ class TestAutomaticHvac:
     HEAT_TEMP = 31.0
     DESIRED_TEMP = 33.0
     TASK_DAYS = 'MonTue'
-    COOLING_TEMP = 23
-    HEATING_TEMP = 17
+    START_TEMP = 23
+    STOP_TEMP = 17
     START_TIME = '07:00:00'
     STOP_TIME = '22:00:00'
     TASK_ID = str(uuid.uuid4())
@@ -146,8 +146,8 @@ class TestAutomaticHvac:
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 25
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=8)
-        state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.COOLING_TEMP, self.HEATING_TEMP)
-        state.DAILY_TEMP = self.COOLING_TEMP
+        state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
+        state.DAILY_TEMP = self.START_TEMP
 
         run_thermostat_program(state)
         mock_gpio.turn_on_hvac.assert_called_with(Automation.HVAC.AIR_CONDITIONING)
@@ -156,8 +156,18 @@ class TestAutomaticHvac:
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 25
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=7, minute=00, second=00)
-        state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.COOLING_TEMP, self.HEATING_TEMP)
-        state.DAILY_TEMP = self.COOLING_TEMP
+        state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
+        state.DAILY_TEMP = self.START_TEMP
 
         run_thermostat_program(state)
         mock_gpio.turn_on_hvac.assert_called_with(Automation.HVAC.AIR_CONDITIONING)
+
+    def test_run_temperature_program__when_temp_below_heating_threshold_and_at_start_time_will_turn_on_hvac(self, mock_convert, mock_gpio, mock_file, mock_date):
+        mock_file.return_value = self.FILE_DESIRED
+        mock_convert.return_value = 17
+        mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=7, minute=00, second=00)
+        state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
+        state.DAILY_TEMP = self.STOP_TEMP
+
+        run_thermostat_program(state)
+        mock_gpio.turn_on_hvac.assert_called_with(Automation.HVAC.FURNACE)
