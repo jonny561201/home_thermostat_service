@@ -32,13 +32,6 @@ class TestLightApiRequests:
 
         assert actual == response
 
-    def test_get_hvac_tasks_by_user__should_convert_alarm_time_to_time_object(self, mock_requests):
-        response = [{'alarm_light_group': '1', 'alarm_time': '00:00:01'}]
-        mock_requests.get.return_value = self.__create_response(status=200, data=response)
-        actual = get_hvac_tasks_by_user(self.USER_ID)
-
-        assert actual[0]['alarm_time'] == time(hour=0, minute=0, second=1)
-
     def test_get_hvac_tasks_by_user__should_return_empty_list_when_alarm_is_not_present(self, mock_requests):
         response = []
         mock_requests.get.return_value = self.__create_response(status=200, data=response)
