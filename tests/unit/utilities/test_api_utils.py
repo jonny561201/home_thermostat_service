@@ -50,6 +50,14 @@ class TestLightApiRequests:
 
         mock_requests.get.assert_called_with(f'{self.BASE_URL}/temperature/{self.USER_ID}')
 
+    def test_get_weather_data_by_user__should_return_response_from_api_call(self, mock_requests):
+        response = {'minThermostatTemp': 50, 'mode': 'heating', 'temp': 38.77}
+        mock_requests.get.return_value = self.__create_response(status=200, data=response)
+
+        actual = get_weather_data_by_user(self.USER_ID)
+
+        assert actual == response
+
     @staticmethod
     def __create_response(status=200, data=None):
         response = Response()
