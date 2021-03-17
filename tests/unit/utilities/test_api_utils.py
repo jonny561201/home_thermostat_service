@@ -64,6 +64,12 @@ class TestLightApiRequests:
 
         assert actual is None
 
+    def test_get_weather_data_by_user__should_return_none_when_response_not_success_status(self, mock_requests):
+        mock_requests.get.return_value = self.__create_response(status=400)
+        actual = get_weather_data_by_user(self.USER_ID)
+
+        assert actual is None
+
     @staticmethod
     def __create_response(status=200, data=None):
         response = Response()
