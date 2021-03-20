@@ -31,3 +31,13 @@ class TestThreadState:
         state.get_daily_high()
 
         mock_api.assert_called_with(self.USER_ID)
+
+    @patch('src.constants.thread_state.get_weather_data_by_user')
+    def test_get_daily_high__should_return_daily_high_value(self, mock_api):
+        state = HvacState(None, None, self.BLANK, self.STOP, None, None)
+        response = {"currentTemp": 73.616, "isFahrenheit": False, "maxTemp": 60.8, "minTemp": 59, "temp": 59.67}
+        mock_api.return_value = response
+
+        actual = state.get_daily_high()
+
+        assert actual == response['maxTemp']

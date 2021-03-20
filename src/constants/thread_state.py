@@ -30,5 +30,6 @@ class HvacState(ThreadState):
     # TODO: if the api comes throws save as None and requery
     def get_daily_high(self):
         user_id = Settings.get_instance().user_id
-        get_weather_data_by_user(user_id)
+        response = get_weather_data_by_user(user_id)
+        return response['maxTemp']
         return self.DAILY_TEMP
