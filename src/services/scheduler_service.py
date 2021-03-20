@@ -5,6 +5,8 @@ from src.constants.settings_state import Settings
 from src.utilities.api_utils import get_hvac_tasks_by_user
 
 
+# TODO: update to always add a thread to monitor the desired temp file
+# TODO: Always ensure there is at least one task.  One task could run any program
 def schedule_hvac_tasks():
     try:
         light_state = TaskState.get_instance()

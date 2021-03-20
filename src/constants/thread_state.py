@@ -2,6 +2,7 @@ from datetime import time
 
 from src.constants.settings_state import Settings
 from src.utilities.api_utils import get_weather_data_by_user
+from src.utilities.conversion_utils import convert_to_celsius
 
 
 class ThreadState:
@@ -31,5 +32,7 @@ class HvacState(ThreadState):
     def get_daily_high(self):
         user_id = Settings.get_instance().user_id
         response = get_weather_data_by_user(user_id)
+        if response['isFahrenheit']:
+            return convert_to_celsius(response['maxTemp'])
         return response['maxTemp']
         return self.DAILY_TEMP
