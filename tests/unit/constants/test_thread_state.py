@@ -52,3 +52,11 @@ class TestThreadState:
         actual = state.get_daily_high()
 
         assert actual == celsius_temp
+
+    def test_get_daily_high__should_return_cached_value(self, mock_api, mock_convert):
+        state = HvacState(None, None, self.BLANK, self.STOP, None, None)
+        cached_temp = 23.0
+        state.DAILY_TEMP = cached_temp
+        actual = state.get_daily_high()
+
+        assert actual == cached_temp
