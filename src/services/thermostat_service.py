@@ -17,7 +17,6 @@ def run_thermostat_program(event_state):
         __run_manual_hvac(celsius_temp, state['mode'], state['desiredTemp'])
 
 
-# TODO: test all this behavior
 def __run_automated_hvac(celsius_temp, event_state):
     mode = __calculate_mode(event_state)
     if event_state.START_TIME <= datetime.now().time() < event_state.STOP_TIME:

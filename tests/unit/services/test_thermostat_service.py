@@ -113,6 +113,7 @@ class TestManualHvac:
         mock_gpio.turn_off_hvac.assert_has_calls([mock_call_1, mock_call_2])
 
 
+@patch('src.constants.thread_state.get_weather_data_by_user')
 @patch('src.services.thermostat_service.datetime')
 @patch('src.services.thermostat_service.get_desired_temp')
 @patch('src.services.thermostat_service.gpio_utils')
@@ -131,7 +132,7 @@ class TestAutomaticHvac:
     def setup_method(self):
         self.FILE_DESIRED = {'desiredTemp': self.DESIRED_TEMP, 'mode': None}
 
-    def test_run_temperature_program__should_make_call_to_get_daily_high(self, mock_convert, mock_gpio, mock_file, mock_date):
+    def test_run_temperature_program__should_make_call_to_get_daily_high(self, mock_convert, mock_gpio, mock_file, mock_date, mock_api):
         mock_file.return_value = self.FILE_DESIRED
         mock_state = mock.create_autospec(HvacState)
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=8)
@@ -142,7 +143,7 @@ class TestAutomaticHvac:
         run_thermostat_program(mock_state)
         mock_state.get_daily_high.assert_called()
 
-    def test_run_temperature_program__when_in_cooling_mode_temp_above_cooling_threshold_and_between_start_stop_will_turn_on_hvac(self, mock_convert, mock_gpio, mock_file, mock_date):
+    def test_run_temperature_program__when_in_cooling_mode_temp_above_cooling_threshold_and_between_start_stop_will_turn_on_hvac(self, mock_convert, mock_gpio, mock_file, mock_date, mock_api):
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 25
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=8)
@@ -152,7 +153,7 @@ class TestAutomaticHvac:
         run_thermostat_program(state)
         mock_gpio.turn_on_hvac.assert_called_with(Automation.HVAC.AIR_CONDITIONING)
 
-    def test_run_temperature_program__when_in_cooling_mode_temp_above_cooling_threshold_and_at_start_time_will_turn_on_hvac(self, mock_convert, mock_gpio, mock_file, mock_date):
+    def test_run_temperature_program__when_in_cooling_mode_temp_above_cooling_threshold_and_at_start_time_will_turn_on_hvac(self, mock_convert, mock_gpio, mock_file, mock_date, mock_api):
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 25
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=7, minute=00, second=00)
@@ -162,7 +163,7 @@ class TestAutomaticHvac:
         run_thermostat_program(state)
         mock_gpio.turn_on_hvac.assert_called_with(Automation.HVAC.AIR_CONDITIONING)
 
-    def test_run_temperature_program__when_in_cooling_mode_temp_below_cooling_threshold_and_at_start_time_will_turn_off_hvac(self, mock_convert, mock_gpio, mock_file, mock_date):
+    def test_run_temperature_program__when_in_cooling_mode_temp_below_cooling_threshold_and_at_start_time_will_turn_off_hvac(self, mock_convert, mock_gpio, mock_file, mock_date, mock_api):
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 22
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=7, minute=00, second=00)
@@ -173,7 +174,7 @@ class TestAutomaticHvac:
         mock_gpio.turn_off_hvac.assert_any_call(Automation.HVAC.AIR_CONDITIONING)
         mock_gpio.turn_off_hvac.assert_any_call(Automation.HVAC.FURNACE)
 
-    def test_run_temperature_program__when_in_heating_mode_temp_below_heating_threshold_and_at_start_time_will_turn_on_hvac(self, mock_convert, mock_gpio, mock_file, mock_date):
+    def test_run_temperature_program__when_in_heating_mode_temp_below_heating_threshold_and_at_start_time_will_turn_on_hvac(self, mock_convert, mock_gpio, mock_file, mock_date, mock_api):
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 17
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=7)
@@ -183,7 +184,7 @@ class TestAutomaticHvac:
         run_thermostat_program(state)
         mock_gpio.turn_on_hvac.assert_called_with(Automation.HVAC.FURNACE)
 
-    def test_run_temperature_program__when_in_heating_mode_temp_below_heating_threshold_and_between_start_stop_time_will_turn_on_hvac(self, mock_convert, mock_gpio, mock_file, mock_date):
+    def test_run_temperature_program__when_in_heating_mode_temp_below_heating_threshold_and_between_start_stop_time_will_turn_on_hvac(self, mock_convert, mock_gpio, mock_file, mock_date, mock_api):
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 17
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=8)
@@ -193,7 +194,7 @@ class TestAutomaticHvac:
         run_thermostat_program(state)
         mock_gpio.turn_on_hvac.assert_called_with(Automation.HVAC.FURNACE)
 
-    def test_run_temperature_program__when_in_heating_mode_temp_above_heating_threshold_and_at_start_time_will_turn_off_hvac(self, mock_convert, mock_gpio, mock_file, mock_date):
+    def test_run_temperature_program__when_in_heating_mode_temp_above_heating_threshold_and_at_start_time_will_turn_off_hvac(self, mock_convert, mock_gpio, mock_file, mock_date, mock_api):
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 24
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=8)
@@ -204,7 +205,7 @@ class TestAutomaticHvac:
         mock_gpio.turn_off_hvac.assert_any_call(Automation.HVAC.AIR_CONDITIONING)
         mock_gpio.turn_off_hvac.assert_any_call(Automation.HVAC.FURNACE)
 
-    def test_run_temperature_program__when_in_heating_mode_temp_below_heating_threshold_and_before_time_will_turn_on_hvac(self, mock_convert, mock_gpio, mock_file, mock_date):
+    def test_run_temperature_program__when_in_heating_mode_temp_below_heating_threshold_and_before_time_will_turn_on_hvac(self, mock_convert, mock_gpio, mock_file, mock_date, mock_api):
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 16
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=6, minute=59)
@@ -214,7 +215,7 @@ class TestAutomaticHvac:
         run_thermostat_program(state)
         mock_gpio.turn_on_hvac.assert_called_with(Automation.HVAC.FURNACE)
 
-    def test_run_temperature_program__when_in_heating_mode_temp_below_heating_threshold_and_after_time_will_turn_on_hvac(self, mock_convert, mock_gpio, mock_file, mock_date):
+    def test_run_temperature_program__when_in_heating_mode_temp_below_heating_threshold_and_after_time_will_turn_on_hvac(self, mock_convert, mock_gpio, mock_file, mock_date, mock_api):
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 16
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=22, minute=1)
@@ -224,7 +225,7 @@ class TestAutomaticHvac:
         run_thermostat_program(state)
         mock_gpio.turn_on_hvac.assert_called_with(Automation.HVAC.FURNACE)
 
-    def test_run_temperature_program__when_in_cooling_mode_temp_above_cooling_threshold_and_before_time_will_turn_on_hvac(self, mock_convert, mock_gpio, mock_file, mock_date):
+    def test_run_temperature_program__when_in_cooling_mode_temp_above_cooling_threshold_and_before_time_will_turn_on_hvac(self, mock_convert, mock_gpio, mock_file, mock_date, mock_api):
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 18
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=6, minute=59)
@@ -234,7 +235,7 @@ class TestAutomaticHvac:
         run_thermostat_program(state)
         mock_gpio.turn_on_hvac.assert_called_with(Automation.HVAC.AIR_CONDITIONING)
 
-    def test_run_temperature_program__when_in_cooling_mode_temp_above_cooling_threshold_and_after_time_will_turn_on_hvac(self, mock_convert, mock_gpio, mock_file, mock_date):
+    def test_run_temperature_program__when_in_cooling_mode_temp_above_cooling_threshold_and_after_time_will_turn_on_hvac(self, mock_convert, mock_gpio, mock_file, mock_date, mock_api):
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 19
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=22, minute=1)
@@ -244,7 +245,7 @@ class TestAutomaticHvac:
         run_thermostat_program(state)
         mock_gpio.turn_on_hvac.assert_called_with(Automation.HVAC.AIR_CONDITIONING)
 
-    def test_run_temperature_program__when_in_heating_mode_temp_above_heating_threshold_and_before_time_will_turn_off_hvac(self, mock_convert, mock_gpio, mock_file, mock_date):
+    def test_run_temperature_program__when_in_heating_mode_temp_above_heating_threshold_and_before_time_will_turn_off_hvac(self, mock_convert, mock_gpio, mock_file, mock_date, mock_api):
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 18
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=6, minute=59)
@@ -255,7 +256,7 @@ class TestAutomaticHvac:
         mock_gpio.turn_off_hvac.assert_any_call(Automation.HVAC.AIR_CONDITIONING)
         mock_gpio.turn_off_hvac.assert_any_call(Automation.HVAC.FURNACE)
 
-    def test_run_temperature_program__when_in_cooling_mode_temp_below_cooling_threshold_and_after_time_will_turn_off_hvac(self, mock_convert, mock_gpio, mock_file, mock_date):
+    def test_run_temperature_program__when_in_cooling_mode_temp_below_cooling_threshold_and_after_time_will_turn_off_hvac(self, mock_convert, mock_gpio, mock_file, mock_date, mock_api):
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 16
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=22, minute=1)
