@@ -19,12 +19,12 @@ class TestManualHvac:
     def setup_method(self):
         self.FILE_DESIRED = {'desiredTemp': self.DESIRED_TEMP, 'mode': Automation.HVAC.MODE.COOLING, 'isAuto': False}
 
-    def test_run_temperature_program__should_make_no_calls_when_not_auto_and_not_manual_mode(self, mock_convert, mock_gpio, mock_file):
+    def test_run_temperature_program__should_turn_everything_off_when_not_auto_and_not_manual_mode(self, mock_convert, mock_gpio, mock_file):
         self.FILE_DESIRED['mode'] = None
         mock_file.return_value = self.FILE_DESIRED
         run_thermostat_program(None)
-        mock_gpio.turn_on_hvac.assert_not_called()
-        mock_gpio.turn_off_hvac.assert_not_called()
+        mock_gpio.turn_off_hvac.assert_any_call(Automation.HVAC.FURNACE)
+        mock_gpio.turn_off_hvac.assert_any_call(Automation.HVAC.AIR_CONDITIONING)
 
     def test_run_temperature_program__should_make_call_to_read_temperature_file(self, mock_convert, mock_gpio, mock_file):
         mock_file.return_value = self.FILE_DESIRED
