@@ -14,31 +14,32 @@ def run_thermostat_program(event_state):
     if state['isAuto']:
         __run_automated_hvac(celsius_temp, event_state)
     elif state['mode'] is not None:
-        __run_manual_hvac(celsius_temp, state['mode'], state['desiredTemp'])
+        __run_manual_hvac(event_state, celsius_temp, state['mode'], state['desiredTemp'])
     else:
-        __turn_all_off()
+        __turn_all_off(event_state)
 
 
 def __run_automated_hvac(celsius_temp, event_state):
     mode = __calculate_mode(event_state, celsius_temp)
     if event_state.START_TIME <= datetime.now().time() < event_state.STOP_TIME:
-        __run_manual_hvac(celsius_temp, mode, event_state.START_TEMP)
+        __run_manual_hvac(event_state, celsius_temp, mode, event_state.START_TEMP)
     else:
-        __run_manual_hvac(celsius_temp, mode, event_state.STOP_TEMP)
+        __run_manual_hvac(event_state, celsius_temp, mode, event_state.STOP_TEMP)
 
 
-def __run_manual_hvac(celsius_temp, mode, desired_temp):
+def __run_manual_hvac(event_state, celsius_temp, mode, desired_temp):
     if mode == Automation.HVAC.MODE.COOLING and celsius_temp > desired_temp:
         gpio_utils.turn_on_hvac(Automation.HVAC.AIR_CONDITIONING)
     elif mode == Automation.HVAC.MODE.HEATING and celsius_temp < desired_temp:
         gpio_utils.turn_on_hvac(Automation.HVAC.FURNACE)
     else:
-        __turn_all_off()
+        __turn_all_off(event_state)
 
 
-def __turn_all_off():
-    gpio_utils.turn_off_hvac(Automation.HVAC.AIR_CONDITIONING)
-    gpio_utils.turn_off_hvac(Automation.HVAC.FURNACE)
+def __turn_all_off(event_state):
+    if not event_state.STOPPED:
+        gpio_utils.turn_off_hvac(Automation.HVAC.AIR_CONDITIONING)
+        gpio_utils.turn_off_hvac(Automation.HVAC.FURNACE)
 
 
 def __calculate_mode(event_state, celsius_temp):

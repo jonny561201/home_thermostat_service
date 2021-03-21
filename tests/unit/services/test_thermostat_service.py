@@ -15,21 +15,23 @@ class TestManualHvac:
     DESIRED_TEMP = 33.0
     AC_TEMP = 35.0
     HEAT_TEMP = 31.0
+    TASK_ID = str(uuid.uuid4())
 
     def setup_method(self):
+        self.STATE = HvacState(self.TASK_ID, 'Mon', '01:30:00', '09:30:00', 23, 19)
         self.FILE_DESIRED = {'desiredTemp': self.DESIRED_TEMP, 'mode': Automation.HVAC.MODE.COOLING, 'isAuto': False}
 
     def test_run_temperature_program__should_turn_everything_off_when_not_auto_and_not_manual_mode(self, mock_convert, mock_gpio, mock_file):
         self.FILE_DESIRED['mode'] = None
         mock_file.return_value = self.FILE_DESIRED
-        run_thermostat_program(None)
+        run_thermostat_program(self.STATE)
         mock_gpio.turn_off_hvac.assert_any_call(Automation.HVAC.FURNACE)
         mock_gpio.turn_off_hvac.assert_any_call(Automation.HVAC.AIR_CONDITIONING)
 
     def test_run_temperature_program__should_make_call_to_read_temperature_file(self, mock_convert, mock_gpio, mock_file):
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = self.AC_TEMP
-        run_thermostat_program(None)
+        run_thermostat_program(self.STATE)
         mock_gpio.read_temperature_file.assert_called()
 
     def test_run_temperature_program__should_call_get_user_temperature(self, mock_convert, mock_gpio, mock_file):
@@ -37,7 +39,7 @@ class TestManualHvac:
         mock_gpio.read_temperature_file.return_value = self.AC_TEMP
         mock_convert.return_value = self.AC_TEMP
 
-        run_thermostat_program(None)
+        run_thermostat_program(self.STATE)
         mock_convert.assert_called()
 
     def test_run_temperature_program__should_make_call_to_get_user_temperature_with_result_of_temp_file(self, mock_convert, mock_gpio, mock_file):
@@ -45,28 +47,28 @@ class TestManualHvac:
         mock_gpio.read_temperature_file.return_value = self.AC_TEMP
         mock_convert.return_value = self.AC_TEMP
 
-        run_thermostat_program(None)
+        run_thermostat_program(self.STATE)
         mock_convert.assert_called_with(self.AC_TEMP, ANY)
 
     def test_run_temperature_program__should_make_call_to_get_user_temperature_with_celsius(self, mock_convert, mock_gpio, mock_file):
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = self.AC_TEMP
 
-        run_thermostat_program(None)
+        run_thermostat_program(self.STATE)
         mock_convert.assert_called_with(ANY, False)
 
     def test_run_temperature_program__should_not_call_ac_on_when_temp_below_desired(self, mock_convert, mock_gpio, mock_file):
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = self.HEAT_TEMP
 
-        run_thermostat_program(None)
+        run_thermostat_program(self.STATE)
         mock_gpio.turn_on_hvac.assert_not_called()
 
     def test_run_temperature_program__should_turn_on_ac_when_temp_above_desired_and_mode_cooling(self, mock_convert, mock_gpio, mock_file):
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = self.AC_TEMP
 
-        run_thermostat_program(None)
+        run_thermostat_program(self.STATE)
         mock_gpio.turn_on_hvac.assert_called_with(Automation.HVAC.AIR_CONDITIONING)
 
     def test_run_temperature_program__should_turn_on_furnace_when_temp_below_desired_and_mode_heating(self, mock_convert, mock_gpio, mock_file):
@@ -74,7 +76,7 @@ class TestManualHvac:
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = self.HEAT_TEMP
 
-        run_thermostat_program(None)
+        run_thermostat_program(self.STATE)
         mock_gpio.turn_on_hvac.assert_called_with(Automation.HVAC.FURNACE)
 
     def test_run_temperature_program__should_not_turn_on_furnace_when_temp_above_desired_and_mode_heating(self, mock_convert, mock_gpio, mock_file):
@@ -82,7 +84,7 @@ class TestManualHvac:
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = self.AC_TEMP
 
-        run_thermostat_program(None)
+        run_thermostat_program(self.STATE)
         mock_gpio.turn_on_hvac.assert_not_called()
 
     def test_run_temperature_program__should_turn_off_furnace_when_temp_above_desired_and_mode_heating(self, mock_convert, mock_gpio, mock_file):
@@ -90,7 +92,7 @@ class TestManualHvac:
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = self.AC_TEMP
 
-        run_thermostat_program(None)
+        run_thermostat_program(self.STATE)
         mock_gpio.turn_off_hvac.assert_called_with(Automation.HVAC.FURNACE)
 
     def test_run_temperature_program__should_turn_off_furnace_when_temp_equal_desired_and_mode_heating(self, mock_convert, mock_gpio, mock_file):
@@ -98,7 +100,7 @@ class TestManualHvac:
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = self.DESIRED_TEMP
 
-        run_thermostat_program(None)
+        run_thermostat_program(self.STATE)
         mock_gpio.turn_off_hvac.assert_called_with(Automation.HVAC.FURNACE)
 
     def test_run_temperature_program__should_turn_off_ac_and_furnace_when_temp_below_desired_and_mode_cooling(self, mock_convert, mock_gpio, mock_file):
@@ -107,7 +109,7 @@ class TestManualHvac:
         mock_call_1 = call(Automation.HVAC.AIR_CONDITIONING)
         mock_call_2 = call(Automation.HVAC.FURNACE)
 
-        run_thermostat_program(None)
+        run_thermostat_program(self.STATE)
         mock_gpio.turn_off_hvac.assert_has_calls([mock_call_1, mock_call_2])
 
     def test_run_temperature_program__should_turn_off_ac_and_furnace_when_temp_equal_desired_and_mode_heating(self, mock_convert, mock_gpio, mock_file):
@@ -116,7 +118,7 @@ class TestManualHvac:
         mock_call_1 = call(Automation.HVAC.AIR_CONDITIONING)
         mock_call_2 = call(Automation.HVAC.FURNACE)
 
-        run_thermostat_program(None)
+        run_thermostat_program(self.STATE)
         mock_gpio.turn_off_hvac.assert_has_calls([mock_call_1, mock_call_2])
 
 
