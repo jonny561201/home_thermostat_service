@@ -225,6 +225,16 @@ class TestAutomaticHvac:
         run_thermostat_program(state)
         mock_gpio.turn_on_hvac.assert_called_with(Automation.HVAC.FURNACE)
 
+    def test_run_temperature_program__when_in_heating_mode_temp_above_cooling_threshold_and_between_time_will_not_turn_on_hvac(self, mock_convert, mock_gpio, mock_file, mock_date, mock_api):
+        mock_file.return_value = self.FILE_DESIRED
+        mock_convert.return_value = 22
+        mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=18)
+        state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
+        state.DAILY_TEMP = self.STOP_TEMP
+
+        run_thermostat_program(state)
+        mock_gpio.turn_on_hvac.assert_not_called()
+
     def test_run_temperature_program__when_in_cooling_mode_temp_above_cooling_threshold_and_before_time_will_turn_on_hvac(self, mock_convert, mock_gpio, mock_file, mock_date, mock_api):
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 20
@@ -245,10 +255,10 @@ class TestAutomaticHvac:
         run_thermostat_program(state)
         mock_gpio.turn_on_hvac.assert_called_with(Automation.HVAC.AIR_CONDITIONING)
 
-    def test_run_temperature_program__when_in_cooling_mode_temp_below_heating_threshold_and_after_time_will_not_turn_on_cooling(self, mock_convert, mock_gpio, mock_file, mock_date, mock_api):
+    def test_run_temperature_program__when_in_cooling_mode_temp_below_heating_threshold_and_during_time_will_not_turn_on_cooling(self, mock_convert, mock_gpio, mock_file, mock_date, mock_api):
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 18
-        mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=22, minute=1)
+        mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=18)
         state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
         state.DAILY_TEMP = self.START_TEMP
 
