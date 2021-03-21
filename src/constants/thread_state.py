@@ -31,7 +31,7 @@ class HvacState(ThreadState):
     # TODO: if the api comes throws save as None and requery
     def get_daily_high(self):
         time = datetime.now().time()
-        if time.hour == 0 and time.minute == 1:
+        if time.hour == 0 and time.minute == 1 or time.minute == 0:
             self.DAILY_TEMP = None
         if self.DAILY_TEMP is not None:
             return self.DAILY_TEMP
