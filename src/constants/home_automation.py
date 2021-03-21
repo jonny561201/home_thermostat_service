@@ -9,6 +9,8 @@ class Hvac:
     MODE = Mode
     FURNACE = 'furnace'
     AIR_CONDITIONING = 'ac'
+    MIN_COOLING = 15.0
+    MAX_HEATING = 25.0
 
 
 class Garage:

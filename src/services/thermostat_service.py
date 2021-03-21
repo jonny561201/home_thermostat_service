@@ -39,9 +39,9 @@ def __calculate_mode(event_state, celsius_temp):
     daily_high = event_state.get_daily_high()
     if daily_high is None:
         return Automation.HVAC.MODE.TURN_OFF
-    elif daily_high > 22 and celsius_temp > 16:
+    elif daily_high > 22 and celsius_temp > Automation.HVAC.MIN_COOLING:
         return Automation.HVAC.MODE.COOLING
-    elif daily_high < 18 and celsius_temp < 24:
+    elif daily_high < 18 and celsius_temp < Automation.HVAC.MAX_HEATING:
         return Automation.HVAC.MODE.HEATING
     else:
         return Automation.HVAC.MODE.TURN_OFF
