@@ -11,9 +11,9 @@ def run_thermostat_program(event_state):
     celsius_temp = get_user_temperature(temp_file, False)
     state = get_desired_temp()
 
-    if state['mode'] is None:
+    if state['isAuto']:
         __run_automated_hvac(celsius_temp, event_state)
-    else:
+    elif state['mode'] is not None:
         __run_manual_hvac(celsius_temp, state['mode'], state['desiredTemp'])
 
 
