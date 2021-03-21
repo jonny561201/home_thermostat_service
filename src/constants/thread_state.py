@@ -11,7 +11,7 @@ class ThreadState:
 
 
 class HvacState(ThreadState):
-    TRIGGERED = False
+    STOPPED = False
     START_TIME = None
     STOP_TIME = None
     START_TEMP = None
@@ -19,7 +19,7 @@ class HvacState(ThreadState):
     DAYS = None
     DAILY_TEMP = None
 
-    def __init__(self, task_id: str, days: str, start: str, stop: str, start_temp: int, stop_temp: int):
+    def __init__(self, task_id: str, days: str, start: str, stop: str, start_temp: float, stop_temp: float):
         self.THREAD_ID = task_id
         self.DAYS = days
         self.START_TEMP = start_temp
