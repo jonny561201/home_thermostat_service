@@ -10,7 +10,7 @@ def get_desired_temp():
         with open(file_name, 'r', encoding='utf-8') as file:
             return json.load(file)
     except (FileNotFoundError, TypeError):
-        content = {'desiredTemp': 21.1111, 'mode': Automation.HVAC.MODE.TURN_OFF}
+        content = {'desiredTemp': 21.1111, 'mode': Automation.HVAC.MODE.TURN_OFF, 'isAuto': False}
         with open(file_name, "w+") as file:
             json.dump(content, file)
         return content
