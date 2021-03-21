@@ -27,7 +27,6 @@ class HvacState(ThreadState):
         self.START_TIME = time.fromisoformat(start)
         self.STOP_TIME = time.fromisoformat(stop)
 
-    # TODO: if the api comes throws save as None and requery
     def get_daily_high(self):
         current_time = datetime.now().time()
         if current_time.hour == 0 and current_time.minute == 1 or current_time.minute == 0:

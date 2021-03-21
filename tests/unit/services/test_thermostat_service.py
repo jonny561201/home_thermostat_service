@@ -266,3 +266,15 @@ class TestAutomaticHvac:
         run_thermostat_program(state)
         mock_gpio.turn_off_hvac.assert_any_call(Automation.HVAC.AIR_CONDITIONING)
         mock_gpio.turn_off_hvac.assert_any_call(Automation.HVAC.FURNACE)
+
+
+    def test_run_temperature_program__should_turn_off_hvac_when_daily_high_fails(self, mock_convert, mock_gpio, mock_file, mock_date, mock_api):
+        mock_api.return_value = None
+        mock_file.return_value = self.FILE_DESIRED
+        mock_convert.return_value = 19
+        mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=22, minute=1)
+        state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
+
+        run_thermostat_program(state)
+        mock_gpio.turn_off_hvac.assert_any_call(Automation.HVAC.AIR_CONDITIONING)
+        mock_gpio.turn_off_hvac.assert_any_call(Automation.HVAC.FURNACE)

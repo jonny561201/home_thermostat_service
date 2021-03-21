@@ -37,7 +37,9 @@ def __run_manual_hvac(celsius_temp, mode, desired_temp):
 
 def __calculate_mode(event_state):
     daily_high = event_state.get_daily_high()
-    if daily_high > 22:
+    if daily_high is None:
+        return Automation.HVAC.MODE.TURN_OFF
+    elif daily_high > 22:
         return Automation.HVAC.MODE.COOLING
     elif daily_high < 18:
         return Automation.HVAC.MODE.HEATING
