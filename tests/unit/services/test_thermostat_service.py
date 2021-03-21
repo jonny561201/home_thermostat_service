@@ -137,7 +137,7 @@ class TestAutomaticHvac:
     TASK_ID = str(uuid.uuid4())
 
     def setup_method(self):
-        self.FILE_DESIRED = {'desiredTemp': self.DESIRED_TEMP, 'mode': None}
+        self.FILE_DESIRED = {'desiredTemp': self.DESIRED_TEMP, 'mode': None, 'isAuto': True}
 
     def test_run_temperature_program__should_make_call_to_get_daily_high(self, mock_convert, mock_gpio, mock_file, mock_date, mock_api):
         mock_file.return_value = self.FILE_DESIRED
