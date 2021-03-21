@@ -15,8 +15,8 @@ class TestLightService:
     USER_ID = 'def098'
     MODE = 'HEAT'
     TYPE = 'hvac'
-    START = datetime.time()
-    STOP = datetime.time()
+    START = '05:30:00'
+    STOP = '16:50:00'
     START_TEMP = 20
     STOP_TEMP = 16
     TASK_ID = str(uuid.uuid4())
