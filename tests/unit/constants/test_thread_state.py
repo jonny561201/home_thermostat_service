@@ -1,5 +1,5 @@
 import uuid
-from datetime import time
+from datetime import time, datetime
 
 from mock import patch
 
@@ -60,3 +60,13 @@ class TestThreadState:
         actual = state.get_daily_high()
 
         assert actual == cached_temp
+
+    @patch('src.constants.thread_state.datetime')
+    def test_get_daily_high__should_reset_cached_value_when_rolls_over_to_new_day(self, mock_date, mock_api, mock_convert):
+        mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=0, minute=1)
+        state = HvacState(None, None, self.BLANK, self.STOP, None, None)
+        cached_temp = 23.0
+        state.DAILY_TEMP = cached_temp
+        state.get_daily_high()
+
+        assert state.DAILY_TEMP is None

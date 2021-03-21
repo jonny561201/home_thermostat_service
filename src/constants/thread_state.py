@@ -1,4 +1,4 @@
-from datetime import time
+from datetime import datetime, time
 
 from src.constants.settings_state import Settings
 from src.utilities.api_utils import get_weather_data_by_user
@@ -30,11 +30,14 @@ class HvacState(ThreadState):
     # TODO: have the state object query the daily high temp (cache it and requery each day once when rolls over)
     # TODO: if the api comes throws save as None and requery
     def get_daily_high(self):
+        time = datetime.now().time()
+        if time.hour == 0 and time.minute == 1:
+            self.DAILY_TEMP = None
         if self.DAILY_TEMP is not None:
             return self.DAILY_TEMP
-
-        user_id = Settings.get_instance().user_id
-        response = get_weather_data_by_user(user_id)
-        if response['isFahrenheit']:
-            return convert_to_celsius(response['maxTemp'])
-        return response['maxTemp']
+        else:
+            user_id = Settings.get_instance().user_id
+            response = get_weather_data_by_user(user_id)
+            if response['isFahrenheit']:
+                return convert_to_celsius(response['maxTemp'])
+            return response['maxTemp']
