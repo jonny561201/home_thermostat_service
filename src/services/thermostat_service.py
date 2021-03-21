@@ -45,5 +45,7 @@ def __calculate_mode(event_state, celsius_temp):
         return Automation.HVAC.MODE.HEATING
     elif celsius_temp <= Automation.HVAC.MIN_COOLING:
         return Automation.HVAC.MODE.HEATING
+    elif celsius_temp > Automation.HVAC.MAX_HEATING:
+        return Automation.HVAC.MODE.COOLING
     else:
         return Automation.HVAC.MODE.TURN_OFF
