@@ -1,10 +1,9 @@
-import datetime
 import uuid
 
 from mock import patch
 
-from src.constants.thread_state import HvacState
 from src.constants.settings_state import Settings
+from src.constants.thread_state import HvacState
 from src.services.scheduler_service import schedule_hvac_tasks
 
 
