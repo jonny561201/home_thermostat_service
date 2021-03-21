@@ -64,29 +64,45 @@ class TestThreadState:
     @patch('src.constants.thread_state.datetime')
     def test_get_daily_high__should_reset_cached_value_when_rolls_over_to_new_day(self, mock_date, mock_api, mock_convert):
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=0, minute=0)
+        response = {"currentTemp": 73.616, "isFahrenheit": False, "maxTemp": 21.3, "minTemp": 59, "temp": 59.67}
+        mock_api.return_value = response
         state = HvacState(None, None, self.BLANK, self.STOP, None, None)
         cached_temp = 23.0
         state.DAILY_TEMP = cached_temp
         state.get_daily_high()
 
-        assert state.DAILY_TEMP is None
+        assert state.DAILY_TEMP == response['maxTemp']
 
     @patch('src.constants.thread_state.datetime')
     def test_get_daily_high__should_reset_cached_value_when_within_the_first_few_minutes(self, mock_date, mock_api, mock_convert):
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=0, minute=1)
+        response = {"currentTemp": 73.616, "isFahrenheit": False, "maxTemp": 21.3, "minTemp": 59, "temp": 59.67}
+        mock_api.return_value = response
         state = HvacState(None, None, self.BLANK, self.STOP, None, None)
         cached_temp = 23.0
         state.DAILY_TEMP = cached_temp
         state.get_daily_high()
 
-        assert state.DAILY_TEMP is None
+        assert state.DAILY_TEMP == response['maxTemp']
 
     @patch('src.constants.thread_state.datetime')
-    def test_get_daily_high__should_store_cached_daily_value(self, mock_date, mock_api, mock_convert):
-        response = {"currentTemp": 73.616, "isFahrenheit": False, "maxTemp": 60.8, "minTemp": 59, "temp": 59.67}
+    def test_get_daily_high__should_store_cached_daily_value_when_celsius(self, mock_date, mock_api, mock_convert):
+        response = {"currentTemp": 73.616, "isFahrenheit": False, "maxTemp": 22.0, "minTemp": 59, "temp": 59.67}
         mock_api.return_value = response
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=0, minute=1)
         state = HvacState(None, None, self.BLANK, self.STOP, None, None)
         state.get_daily_high()
 
         assert state.DAILY_TEMP == response['maxTemp']
+
+    @patch('src.constants.thread_state.datetime')
+    def test_get_daily_high__should_store_cached_daily_value_when_fahrenheit(self, mock_date, mock_api, mock_convert):
+        response = {"currentTemp": 73.616, "isFahrenheit": True, "maxTemp": 60.8, "minTemp": 59, "temp": 59.67}
+        mock_api.return_value = response
+        celsius_value = 16.0
+        mock_convert.return_value = celsius_value
+        mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=0, minute=1)
+        state = HvacState(None, None, self.BLANK, self.STOP, None, None)
+        state.get_daily_high()
+
+        assert state.DAILY_TEMP == celsius_value

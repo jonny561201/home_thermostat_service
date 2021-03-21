@@ -39,6 +39,8 @@ class HvacState(ThreadState):
             user_id = Settings.get_instance().user_id
             response = get_weather_data_by_user(user_id)
             if response['isFahrenheit']:
-                return convert_to_celsius(response['maxTemp'])
+                celsius = convert_to_celsius(response['maxTemp'])
+                self.DAILY_TEMP = celsius
+                return celsius
             self.DAILY_TEMP = response['maxTemp']
             return response['maxTemp']
