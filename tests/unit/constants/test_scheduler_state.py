@@ -16,8 +16,8 @@ class TestLightState:
     TYPE = 'hvac'
     MODE = 'COOL'
     TASK_ID = str(uuid.uuid4())
-    STOP_TIME = datetime.time.fromisoformat('22:00:00')
-    START_TIME = datetime.time.fromisoformat('08:00:00')
+    STOP_TIME = '22:00:00'
+    START_TIME = '08:00:00'
     TASK = {'alarm_days': DAYS, 'task_type': TYPE, 'hvac_mode': MODE, 'hvac_start': START_TIME, 'hvac_stop': STOP_TIME, 'task_id': TASK_ID,
             'enabled': False, 'hvac_start_temp': 20, 'hvac_stop_temp': 14}
 
