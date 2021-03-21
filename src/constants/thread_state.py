@@ -29,17 +29,20 @@ class HvacState(ThreadState):
 
     # TODO: if the api comes throws save as None and requery
     def get_daily_high(self):
-        time = datetime.now().time()
-        if time.hour == 0 and time.minute == 1 or time.minute == 0:
+        current_time = datetime.now().time()
+        if current_time.hour == 0 and current_time.minute == 1 or current_time.minute == 0:
             self.DAILY_TEMP = None
         if self.DAILY_TEMP is not None:
             return self.DAILY_TEMP
         else:
-            return self.__get_store_max_temp()
+            return self.__get_cache_max_temp()
 
-    def __get_store_max_temp(self):
+    def __get_cache_max_temp(self):
         user_id = Settings.get_instance().user_id
         response = get_weather_data_by_user(user_id)
+        if response is None:
+            self.DAILY_TEMP = None
+            return None
         temp = response['maxTemp']
         if response['isFahrenheit']:
             temp = convert_to_celsius(response['maxTemp'])

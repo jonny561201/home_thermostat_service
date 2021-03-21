@@ -106,3 +106,13 @@ class TestThreadState:
         state.get_daily_high()
 
         assert state.DAILY_TEMP == celsius_value
+
+    @patch('src.constants.thread_state.datetime')
+    def test_get_daily_high__when_api_call_fails_return_none_and_reset_daily_temp(self, mock_date, mock_api, mock_convert):
+        mock_api.return_value = None
+        mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=0, minute=1)
+        state = HvacState(None, None, self.BLANK, self.STOP, None, None)
+        actual = state.get_daily_high()
+
+        assert state.DAILY_TEMP is None
+        assert actual is None
