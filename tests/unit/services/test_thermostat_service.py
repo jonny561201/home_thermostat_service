@@ -155,6 +155,13 @@ class TestAutomaticHvac:
     def setup_method(self):
         self.FILE_DESIRED = {'desiredTemp': self.DESIRED_TEMP, 'mode': None, 'isAuto': True}
 
+    def test_run_auto_temperature_program__should_not_read_temp_file_when_not_auto_mode(self, mock_convert, mock_gpio, mock_file, mock_date, mock_api):
+        self.FILE_DESIRED['isAuto'] = False
+        mock_file.return_value = self.FILE_DESIRED
+
+        run_auto_thermostat_program(None)
+        mock_gpio.read_temperature_file.assert_not_called()
+
     def test_run_auto_temperature_program__should_make_call_to_get_daily_high(self, mock_convert, mock_gpio, mock_file, mock_date, mock_api):
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 20
