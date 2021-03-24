@@ -7,35 +7,26 @@ from src.utilities.user_temp_utils import get_user_temperature
 
 
 def run_manual_thermostat_program(event_state):
-    temp_file = gpio_utils.read_temperature_file()
-    celsius_temp = get_user_temperature(temp_file, False)
     state = get_desired_temp()
 
     if state['mode'] is not None:
+        temp_file = gpio_utils.read_temperature_file()
+        celsius_temp = get_user_temperature(temp_file, False)
         __run_manual_hvac(event_state, celsius_temp, state['mode'], state['desiredTemp'])
     else:
         __turn_all_off(event_state)
 
 
 def run_auto_thermostat_program(event_state):
-    temp_file = gpio_utils.read_temperature_file()
-    celsius_temp = get_user_temperature(temp_file, False)
     state = get_desired_temp()
-
     if state['isAuto']:
-        __run_automated_hvac(celsius_temp, event_state)
-    elif state['mode'] is not None:
-        __run_manual_hvac(event_state, celsius_temp, state['mode'], state['desiredTemp'])
-    else:
-        __turn_all_off(event_state)
-
-
-def __run_automated_hvac(celsius_temp, event_state):
-    mode = __calculate_mode(event_state, celsius_temp)
-    if event_state.START_TIME <= datetime.now().time() < event_state.STOP_TIME:
-        __run_manual_hvac(event_state, celsius_temp, mode, event_state.START_TEMP)
-    else:
-        __run_manual_hvac(event_state, celsius_temp, mode, event_state.STOP_TEMP)
+        temp_file = gpio_utils.read_temperature_file()
+        celsius_temp = get_user_temperature(temp_file, False)
+        mode = __calculate_mode(event_state, celsius_temp)
+        if event_state.START_TIME <= datetime.now().time() < event_state.STOP_TIME:
+            __run_manual_hvac(event_state, celsius_temp, mode, event_state.START_TEMP)
+        else:
+            __run_manual_hvac(event_state, celsius_temp, mode, event_state.STOP_TEMP)
 
 
 def __run_manual_hvac(event_state, celsius_temp, mode, desired_temp):
