@@ -6,7 +6,18 @@ from src.utilities.file_utils import get_desired_temp
 from src.utilities.user_temp_utils import get_user_temperature
 
 
-def run_thermostat_program(event_state):
+def run_manual_thermostat_program(event_state):
+    temp_file = gpio_utils.read_temperature_file()
+    celsius_temp = get_user_temperature(temp_file, False)
+    state = get_desired_temp()
+
+    if state['mode'] is not None:
+        __run_manual_hvac(event_state, celsius_temp, state['mode'], state['desiredTemp'])
+    else:
+        __turn_all_off(event_state)
+
+
+def run_auto_thermostat_program(event_state):
     temp_file = gpio_utils.read_temperature_file()
     celsius_temp = get_user_temperature(temp_file, False)
     state = get_desired_temp()
