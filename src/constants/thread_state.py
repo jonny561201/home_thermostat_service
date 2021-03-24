@@ -11,7 +11,6 @@ class ThreadState:
 
 
 class HvacState(ThreadState):
-    STOPPED = False
     START_TIME = None
     STOP_TIME = None
     START_TEMP = None
