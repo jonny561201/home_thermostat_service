@@ -21,6 +21,12 @@ class TestManualHvac:
         self.STATE = HvacState(self.TASK_ID, 'Mon', '01:30:00', '09:30:00', 23, 19)
         self.FILE_DESIRED = {'desiredTemp': self.DESIRED_TEMP, 'mode': Automation.HVAC.MODE.COOLING, 'isAuto': False}
 
+    def test_run_temperature_program__should_not_read_temp_file_when_not_in_manual_mode(self, mock_convert, mock_gpio, mock_file):
+        self.FILE_DESIRED['mode'] = None
+        mock_file.return_value = self.FILE_DESIRED
+        run_manual_thermostat_program(self.STATE)
+        mock_gpio.read_temperature_file.assert_not_called()
+
     def test_run_temperature_program__should_turn_everything_off_when_not_auto_and_not_manual_mode(self, mock_convert, mock_gpio, mock_file):
         self.FILE_DESIRED['mode'] = None
         mock_file.return_value = self.FILE_DESIRED
