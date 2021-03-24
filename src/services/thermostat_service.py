@@ -13,6 +13,8 @@ def run_manual_thermostat_program(event_state):
         temp_file = gpio_utils.read_temperature_file()
         celsius_temp = get_user_temperature(temp_file, False)
         __run_manual_hvac(event_state, celsius_temp, state['mode'], state['desiredTemp'])
+    elif state['isAuto']:
+        pass
     else:
         __turn_all_off(event_state)
 

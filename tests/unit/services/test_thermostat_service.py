@@ -28,6 +28,14 @@ class TestManualHvac:
         mock_gpio.turn_off_hvac.assert_any_call(Automation.HVAC.FURNACE)
         mock_gpio.turn_off_hvac.assert_any_call(Automation.HVAC.AIR_CONDITIONING)
 
+    def test_run_temperature_program__should_not_turn_everything_off_when_auto_mode(self, mock_convert, mock_gpio, mock_file):
+        self.FILE_DESIRED['mode'] = None
+        self.FILE_DESIRED['isAuto'] = True
+        mock_file.return_value = self.FILE_DESIRED
+        run_manual_thermostat_program(self.STATE)
+        mock_gpio.turn_off_hvac.assert_not_called()
+        mock_gpio.turn_off_hvac.assert_not_called()
+
     def test_run_temperature_program__should_make_call_to_read_temperature_file(self, mock_convert, mock_gpio, mock_file):
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = self.AC_TEMP
