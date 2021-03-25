@@ -119,8 +119,21 @@ class TestLightState:
     def test_add_manual_task__should_not_create_new_thread_when_already_manual_thread(self, mock_thread):
         task_id = str(uuid.uuid4())
         task = ManualHvacState(task_id)
+        task.ACTIVE_THREAD = mock.create_autospec(MyThread)
         self.STATE.SCHEDULED_TASKS.append(task)
         self.STATE.add_manual_task()
 
         assert len(self.STATE.SCHEDULED_TASKS) == 1
         assert self.STATE.SCHEDULED_TASKS[0].THREAD_ID == task_id
+
+    def test_add_manual_task__should_remove_thread_when_not_alive_and_recreate(self, mock_thread):
+        task_id = str(uuid.uuid4())
+        thread = MyThread(Event(), lambda: print('test'), Automation.TIME.FIVE_SECONDS)
+        thread.stopped.set()
+        task = ManualHvacState(task_id)
+        task.ACTIVE_THREAD = thread
+        self.STATE.SCHEDULED_TASKS.append(task)
+        self.STATE.add_manual_task()
+
+        assert len(self.STATE.SCHEDULED_TASKS) == 1
+        assert self.STATE.SCHEDULED_TASKS[0].THREAD_ID != task_id

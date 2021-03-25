@@ -32,6 +32,9 @@ class TaskState:
             existing_task.ACTIVE_THREAD.stopped.set()
 
     def add_manual_task(self):
+        manual_task = next((task for task in self.SCHEDULED_TASKS if task.IS_MANUAL is True), None)
+        if manual_task is not None and not manual_task.ACTIVE_THREAD.is_alive():
+            self.remove_task(manual_task.THREAD_ID)
         if not any(existing_task.IS_MANUAL is True for existing_task in self.SCHEDULED_TASKS):
             manual_task = ManualHvacState(str(uuid.uuid4()))
             manual_task.ACTIVE_THREAD = create_thread(run_manual_thermostat_program, Automation.TIME.ONE_MINUTE)
