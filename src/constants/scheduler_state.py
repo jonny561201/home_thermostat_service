@@ -1,5 +1,3 @@
-import logging
-
 from src.constants.home_automation import Automation
 from src.constants.thread_state import HvacState
 from src.services.thermostat_service import run_auto_thermostat_program
@@ -20,7 +18,6 @@ class TaskState:
     def add_hvac_task(self, task):
         task_id = task['task_id']
         if not any(existing_task.THREAD_ID == task_id for existing_task in self.SCHEDULED_TASKS):
-            logging.info(f'-----added new hvac task id: {task_id}-----')
             task_state = HvacState(task_id, task['alarm_days'], task['hvac_start'], task['hvac_stop'], task['hvac_start_temp'], task['hvac_stop_temp'])
             task_state.ACTIVE_THREAD = create_thread(lambda: run_auto_thermostat_program(task_state), Automation.TIME.ONE_MINUTE)
             task_state.ACTIVE_THREAD.start()
@@ -29,7 +26,6 @@ class TaskState:
     def remove_task(self, task_id):
         index = next((i for i, x in enumerate(self.SCHEDULED_TASKS) if x.THREAD_ID == task_id), None)
         if index is not None:
-            logging.info(f'-----removed hvac task id: {task_id}-----')
             existing_task = self.SCHEDULED_TASKS.pop(index)
             existing_task.ACTIVE_THREAD.stopped.set()
 
