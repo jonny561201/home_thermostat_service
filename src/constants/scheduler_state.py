@@ -1,5 +1,7 @@
+import uuid
+
 from src.constants.home_automation import Automation
-from src.constants.thread_state import AutoHvacState
+from src.constants.thread_state import AutoHvacState, ManualHvacState
 from src.services.thermostat_service import run_auto_thermostat_program
 from src.utilities.event_utils import create_thread
 
@@ -29,6 +31,9 @@ class TaskState:
             existing_task = self.SCHEDULED_TASKS.pop(index)
             existing_task.ACTIVE_THREAD.stopped.set()
 
+    def add_manual_task(self):
+        manual_task = ManualHvacState(str(uuid.uuid4()))
+        self.SCHEDULED_TASKS.append(manual_task)
 
     @staticmethod
     def get_instance():

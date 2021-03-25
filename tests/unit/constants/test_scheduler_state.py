@@ -85,3 +85,9 @@ class TestLightState:
         self.STATE.remove_task(self.TASK_ID)
 
         event.set.assert_called()
+
+    def test_add_manual_task__should_add_manual_task_when_it_does_not_exist(self, mock_thread):
+        self.STATE.add_manual_task()
+
+        assert len(self.STATE.SCHEDULED_TASKS) == 1
+        assert self.STATE.SCHEDULED_TASKS[0].IS_MANUAL is True
