@@ -17,7 +17,7 @@ class TaskState:
         else:
             TaskState.__instance = self
 
-    def add_hvac_task(self, task):
+    def add_auto_task(self, task):
         task_id = task['task_id']
         if not any(existing_task.THREAD_ID == task_id for existing_task in self.SCHEDULED_TASKS):
             task_state = AutoHvacState(task_id, task['alarm_days'], task['hvac_start'], task['hvac_stop'], task['hvac_start_temp'], task['hvac_stop_temp'])

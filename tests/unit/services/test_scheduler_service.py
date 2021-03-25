@@ -34,31 +34,31 @@ class TestLightService:
         mock_tasks.return_value = [{'alarm_days': self.DAYS, 'task_type': self.TYPE, 'hvac_mode': self.MODE, 'hvac_start': self.START, 'hvac_stop': self.STOP, 'task_id': self.TASK_ID}]
         schedule_hvac_tasks()
 
-        mock_state.get_instance.return_value.add_hvac_task.assert_not_called()
+        mock_state.get_instance.return_value.add_auto_task.assert_not_called()
 
     def test_schedule_hvac_tasks__should_not_call_add_replace_alarm_when_disabled(self, mock_tasks, mock_state):
         mock_tasks.return_value = [{'alarm_days': self.DAYS, 'task_type': self.TYPE, 'hvac_mode': self.MODE, 'hvac_start': self.START, 'hvac_stop': self.STOP, 'task_id': self.TASK_ID, 'enabled': False}]
         schedule_hvac_tasks()
 
-        mock_state.get_instance.return_value.add_hvac_task.assert_not_called()
+        mock_state.get_instance.return_value.add_auto_task.assert_not_called()
 
     def test_schedule_hvac_tasks__should_not_call_add_replace_alarm_when_alarm_days_none(self, mock_tasks, mock_state):
         mock_tasks.return_value = [{'alarm_days': self.DAYS, 'task_type': self.TYPE, 'hvac_mode': self.MODE, 'hvac_start': self.START, 'hvac_stop': self.STOP, 'task_id': self.TASK_ID}]
         schedule_hvac_tasks()
 
-        mock_state.get_instance.return_value.add_hvac_task.assert_not_called()
+        mock_state.get_instance.return_value.add_auto_task.assert_not_called()
 
     def test_schedule_hvac_tasks__should_not_call_add_light_alarm_when_light_tasks_are_none(self, mock_tasks, mock_state):
         mock_tasks.return_value = None
         schedule_hvac_tasks()
 
-        mock_state.get_instance.return_value.add_hvac_task.assert_not_called()
+        mock_state.get_instance.return_value.add_auto_task.assert_not_called()
 
     def test_schedule_hvac_tasks__should_not_call_add_replace_alarm_when_alarm_group_id_none(self, mock_tasks, mock_state):
         mock_tasks.return_value = [{'alarm_days': self.DAYS, 'task_type': self.TYPE, 'hvac_mode': self.MODE, 'hvac_start': self.START, 'hvac_stop': self.STOP, 'task_id': self.TASK_ID}]
         schedule_hvac_tasks()
 
-        mock_state.get_instance.return_value.add_hvac_task.assert_not_called()
+        mock_state.get_instance.return_value.add_auto_task.assert_not_called()
 
     def test_schedule_hvac_tasks__should_call_add_manual_task(self, mock_tasks, mock_state):
         task = {'alarm_days': self.DAYS, 'task_type': self.TYPE, 'hvac_mode': self.MODE, 'hvac_start': self.START, 'hvac_stop': self.STOP, 'task_id': self.TASK_ID, 'enabled': True}
@@ -72,7 +72,7 @@ class TestLightService:
         mock_tasks.return_value = [task]
         schedule_hvac_tasks()
 
-        mock_state.get_instance.return_value.add_hvac_task.assert_called_with(task)
+        mock_state.get_instance.return_value.add_auto_task.assert_called_with(task)
 
     def test_schedule_hvac_tasks__should_call_remove_light_on_items_missing_from_api_response(self, mock_tasks, mock_state):
         other_task = str(uuid.uuid4())
@@ -93,7 +93,7 @@ class TestLightService:
         mock_state.get_instance.return_value.SCHEDULED_TASKS = []
         schedule_hvac_tasks()
 
-        mock_state.get_instance.return_value.add_hvac_task.assert_not_called()
+        mock_state.get_instance.return_value.add_auto_task.assert_not_called()
         mock_state.get_instance.return_value.remove_task.assert_not_called()
 
     @patch('src.services.scheduler_service.logging')

@@ -21,7 +21,7 @@ def schedule_hvac_tasks():
 def __add_new_tasks(light_state, light_tasks):
     for task in light_tasks:
         if task['hvac_start'] is not None and task['hvac_stop'] is not None and task['alarm_days'] is not None:
-            light_state.add_hvac_task(task)
+            light_state.add_auto_task(task)
 
 
 def __remove_cancelled_tasks(light_state, light_tasks):

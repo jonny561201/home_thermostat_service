@@ -26,34 +26,34 @@ class TestLightState:
 
     @mock.patch('src.constants.scheduler_state.AutoHvacState')
     def test_add_hvac_task__should_create_the_event_thread(self, mock_state, mock_thread):
-        self.STATE.add_hvac_task(self.TASK)
+        self.STATE.add_auto_task(self.TASK)
 
         mock_thread.assert_called_with(mock.ANY, Automation.TIME.ONE_MINUTE)
         mock_state.assert_called()
 
     def test_add_hvac_task__should_store_the_thread_on_the_alarm_list(self, mock_thread):
-        self.STATE.add_hvac_task(self.TASK)
+        self.STATE.add_auto_task(self.TASK)
 
         assert len(self.STATE.SCHEDULED_TASKS) == 1
 
     def test_add_hvac_task__should_start_the_newly_created_thread(self, mock_thread):
         mock_alarm = mock.create_autospec(MyThread)
         mock_thread.return_value = mock_alarm
-        self.STATE.add_hvac_task(self.TASK)
+        self.STATE.add_auto_task(self.TASK)
 
         mock_alarm.start.assert_called()
 
     def test_add_hvac_task__should_not_create_thread_when_it_already_exists(self, mock_thread):
         alarm = AutoHvacState(self.TASK_ID, self.DAYS, self.START_TIME, self.STOP_TIME, 20, 14)
         self.STATE.SCHEDULED_TASKS.append(alarm)
-        self.STATE.add_hvac_task(self.TASK)
+        self.STATE.add_auto_task(self.TASK)
 
         mock_thread.assert_not_called()
 
     def test_add_hvac_task__should_create_thread_when_other_non_matching_threads(self, mock_thread):
         alarm = AutoHvacState(str(uuid.uuid4()), self.DAYS, self.START_TIME, self.STOP_TIME, 21, 15)
         self.STATE.SCHEDULED_TASKS.append(alarm)
-        self.STATE.add_hvac_task(self.TASK)
+        self.STATE.add_auto_task(self.TASK)
 
         mock_thread.assert_called()
 
