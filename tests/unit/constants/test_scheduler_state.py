@@ -103,8 +103,15 @@ class TestLightState:
         assert self.STATE.SCHEDULED_TASKS[0].THREAD_ID == thread_id
 
     def test_add_manual_task__should_store_thread_on_state(self, mock_thread):
-        thread = MyThread(Event(), lambda: print('test'), Automation.TIME.FIVE_SECONDS)
+        thread = mock.create_autospec(MyThread)
         mock_thread.return_value = thread
         self.STATE.add_manual_task()
 
         assert self.STATE.SCHEDULED_TASKS[0].ACTIVE_THREAD == thread
+
+    def test_add_manual_task__should_start_the_newly_created_thread(self, mock_thread):
+        mock_alarm = mock.create_autospec(MyThread)
+        mock_thread.return_value = mock_alarm
+        self.STATE.add_manual_task()
+
+        mock_alarm.start.assert_called()
