@@ -13,12 +13,12 @@ def schedule_hvac_tasks():
             enabled_tasks = [task for task in light_tasks if task['enabled']]
             __add_new_tasks(light_state, enabled_tasks)
             __remove_cancelled_tasks(light_state, enabled_tasks)
-            light_state.add_manual_task()
     except Exception as er:
         logging.error(er)
 
 
 def __add_new_tasks(light_state, light_tasks):
+    light_state.add_manual_task()
     for task in light_tasks:
         if task['hvac_start'] is not None and task['hvac_stop'] is not None and task['alarm_days'] is not None:
             light_state.add_auto_task(task)
