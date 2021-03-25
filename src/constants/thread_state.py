@@ -10,7 +10,7 @@ class ThreadState:
     THREAD_ID = None
 
 
-class HvacState(ThreadState):
+class AutoHvacState(ThreadState):
     START_TIME = None
     STOP_TIME = None
     START_TEMP = None

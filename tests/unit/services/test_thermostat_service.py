@@ -4,7 +4,7 @@ from datetime import time, datetime
 from mock import patch, ANY, call, mock
 
 from src.constants.home_automation import Automation
-from src.constants.thread_state import HvacState
+from src.constants.thread_state import AutoHvacState
 from src.services.thermostat_service import run_auto_thermostat_program, run_manual_thermostat_program
 
 
@@ -164,7 +164,7 @@ class TestAutomaticHvac:
     def test_run_auto_temperature_program__should_make_call_to_get_daily_high(self, mock_convert, mock_gpio, mock_file, mock_date, mock_api):
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 20
-        mock_state = mock.create_autospec(HvacState)
+        mock_state = mock.create_autospec(AutoHvacState)
         mock_state.DAYS = self.TASK_DAYS
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=8)
         mock_state.START_TIME = time.fromisoformat(self.START_TIME)
@@ -177,7 +177,7 @@ class TestAutomaticHvac:
     def test_run_auto_temperature_program__when_cooling_outside_selected_days_will_not_turn_on_hvac(self, mock_convert, mock_gpio, mock_file, mock_date, mock_api):
         mock_file.return_value = self.FILE_DESIRED
         mock_date.now.return_value = datetime(year=2021, month=2, day=17, hour=8)
-        state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
+        state = AutoHvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
         state.DAILY_TEMP = self.START_TEMP
 
         run_auto_thermostat_program(state)
@@ -187,7 +187,7 @@ class TestAutomaticHvac:
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 25
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=8)
-        state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
+        state = AutoHvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
         state.DAILY_TEMP = self.START_TEMP
 
         run_auto_thermostat_program(state)
@@ -197,7 +197,7 @@ class TestAutomaticHvac:
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 25
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=7, minute=00, second=00)
-        state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
+        state = AutoHvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
         state.DAILY_TEMP = self.START_TEMP
 
         run_auto_thermostat_program(state)
@@ -207,7 +207,7 @@ class TestAutomaticHvac:
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 22
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=7, minute=00, second=00)
-        state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
+        state = AutoHvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
         state.DAILY_TEMP = self.START_TEMP
 
         run_auto_thermostat_program(state)
@@ -218,7 +218,7 @@ class TestAutomaticHvac:
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 17
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=7)
-        state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
+        state = AutoHvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
         state.DAILY_TEMP = self.STOP_TEMP
 
         run_auto_thermostat_program(state)
@@ -228,7 +228,7 @@ class TestAutomaticHvac:
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 17
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=8)
-        state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
+        state = AutoHvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
         state.DAILY_TEMP = self.STOP_TEMP
 
         run_auto_thermostat_program(state)
@@ -238,7 +238,7 @@ class TestAutomaticHvac:
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 24
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=8)
-        state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
+        state = AutoHvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
         state.DAILY_TEMP = self.STOP_TEMP
 
         run_auto_thermostat_program(state)
@@ -249,7 +249,7 @@ class TestAutomaticHvac:
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 16
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=6, minute=59)
-        state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
+        state = AutoHvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
         state.DAILY_TEMP = self.STOP_TEMP
 
         run_auto_thermostat_program(state)
@@ -259,7 +259,7 @@ class TestAutomaticHvac:
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 16
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=22, minute=1)
-        state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
+        state = AutoHvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
         state.DAILY_TEMP = self.STOP_TEMP
 
         run_auto_thermostat_program(state)
@@ -269,7 +269,7 @@ class TestAutomaticHvac:
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 20
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=6, minute=59)
-        state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
+        state = AutoHvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
         state.DAILY_TEMP = self.START_TEMP
 
         run_auto_thermostat_program(state)
@@ -279,7 +279,7 @@ class TestAutomaticHvac:
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 19
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=22, minute=1)
-        state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
+        state = AutoHvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
         state.DAILY_TEMP = self.START_TEMP
 
         run_auto_thermostat_program(state)
@@ -289,7 +289,7 @@ class TestAutomaticHvac:
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = Automation.HVAC.MIN_COOLING + 1
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=18)
-        state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
+        state = AutoHvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
         state.DAILY_TEMP = self.START_TEMP
 
         run_auto_thermostat_program(state)
@@ -299,7 +299,7 @@ class TestAutomaticHvac:
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = Automation.HVAC.MIN_COOLING - 1
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=18)
-        state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
+        state = AutoHvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
         state.DAILY_TEMP = self.START_TEMP
 
         run_auto_thermostat_program(state)
@@ -309,7 +309,7 @@ class TestAutomaticHvac:
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = Automation.HVAC.MIN_COOLING
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=18)
-        state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
+        state = AutoHvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
         state.DAILY_TEMP = self.START_TEMP
 
         run_auto_thermostat_program(state)
@@ -319,7 +319,7 @@ class TestAutomaticHvac:
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = Automation.HVAC.MAX_HEATING + 1
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=18)
-        state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
+        state = AutoHvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
         state.DAILY_TEMP = 21
 
         run_auto_thermostat_program(state)
@@ -329,7 +329,7 @@ class TestAutomaticHvac:
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = Automation.HVAC.MAX_HEATING
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=18)
-        state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
+        state = AutoHvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
         state.DAILY_TEMP = 21
 
         run_auto_thermostat_program(state)
@@ -339,7 +339,7 @@ class TestAutomaticHvac:
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 18
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=6, minute=59)
-        state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
+        state = AutoHvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
         state.DAILY_TEMP = self.STOP_TEMP
 
         run_auto_thermostat_program(state)
@@ -350,7 +350,7 @@ class TestAutomaticHvac:
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 16
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=22, minute=1)
-        state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
+        state = AutoHvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
         state.DAILY_TEMP = self.START_TEMP
 
         run_auto_thermostat_program(state)
@@ -363,7 +363,7 @@ class TestAutomaticHvac:
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 19
         mock_date.now.return_value = datetime(year=2021, month=2, day=15, hour=22, minute=1)
-        state = HvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
+        state = AutoHvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
 
         run_auto_thermostat_program(state)
         mock_gpio.turn_off_hvac.assert_any_call(Automation.HVAC.AIR_CONDITIONING)

@@ -1,5 +1,5 @@
 from src.constants.home_automation import Automation
-from src.constants.thread_state import HvacState
+from src.constants.thread_state import AutoHvacState
 from src.services.thermostat_service import run_auto_thermostat_program
 from src.utilities.event_utils import create_thread
 
@@ -18,7 +18,7 @@ class TaskState:
     def add_hvac_task(self, task):
         task_id = task['task_id']
         if not any(existing_task.THREAD_ID == task_id for existing_task in self.SCHEDULED_TASKS):
-            task_state = HvacState(task_id, task['alarm_days'], task['hvac_start'], task['hvac_stop'], task['hvac_start_temp'], task['hvac_stop_temp'])
+            task_state = AutoHvacState(task_id, task['alarm_days'], task['hvac_start'], task['hvac_stop'], task['hvac_start_temp'], task['hvac_stop_temp'])
             task_state.ACTIVE_THREAD = create_thread(lambda: run_auto_thermostat_program(task_state), Automation.TIME.ONE_MINUTE)
             task_state.ACTIVE_THREAD.start()
             self.SCHEDULED_TASKS.append(task_state)

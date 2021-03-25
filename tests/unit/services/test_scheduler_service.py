@@ -3,7 +3,7 @@ import uuid
 from mock import patch
 
 from src.constants.settings_state import Settings
-from src.constants.thread_state import HvacState
+from src.constants.thread_state import AutoHvacState
 from src.services.scheduler_service import schedule_hvac_tasks
 
 
@@ -72,9 +72,9 @@ class TestLightService:
         missing_task = str(uuid.uuid4())
         pref_one = {'alarm_days': self.DAYS, 'task_type': self.TYPE, 'hvac_mode': self.MODE, 'hvac_start': self.START, 'hvac_stop': self.STOP, 'task_id': self.TASK_ID, 'enabled': True}
         pref_two = {'alarm_days': self.DAYS, 'task_type': self.TYPE, 'hvac_mode': self.MODE, 'hvac_start': self.START, 'hvac_stop': self.STOP, 'task_id': other_task, 'enabled': True}
-        alarm_one = HvacState(self.TASK_ID, self.DAYS, self.START, self.STOP, self.START_TEMP, self.STOP_TEMP)
-        alarm_two = HvacState(other_task, self.DAYS, self.START, self.STOP, self.START_TEMP, self.STOP_TEMP)
-        alarm_three = HvacState(missing_task, self.DAYS, self.START, self.STOP, self.START_TEMP, self.STOP_TEMP)
+        alarm_one = AutoHvacState(self.TASK_ID, self.DAYS, self.START, self.STOP, self.START_TEMP, self.STOP_TEMP)
+        alarm_two = AutoHvacState(other_task, self.DAYS, self.START, self.STOP, self.START_TEMP, self.STOP_TEMP)
+        alarm_three = AutoHvacState(missing_task, self.DAYS, self.START, self.STOP, self.START_TEMP, self.STOP_TEMP)
         mock_state.get_instance.return_value.SCHEDULED_TASKS = [alarm_one, alarm_two, alarm_three]
         mock_tasks.return_value = [pref_one, pref_two]
         schedule_hvac_tasks()
