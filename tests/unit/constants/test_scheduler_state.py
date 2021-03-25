@@ -57,7 +57,7 @@ class TestLightState:
 
         mock_thread.assert_called()
 
-    def test_remove_light_alarm__should_remove_item_from_list_with_matching_task_id(self, mock_thread):
+    def test_remove_task__should_remove_item_from_list_with_matching_task_id(self, mock_thread):
         event = mock.create_autospec(Event)
         my_alarm = mock.create_autospec(MyThread)
         my_alarm.stopped = event
@@ -68,14 +68,14 @@ class TestLightState:
 
         assert self.STATE.SCHEDULED_TASKS == []
 
-    def test_remove_light_alarm__should_not_remove_item_from_list_with_different_task_id(self, mock_thread):
+    def test_remove_task__should_not_remove_item_from_list_with_different_task_id(self, mock_thread):
         alarm = HvacState(str(uuid.uuid4()), self.DAYS, self.START_TIME, self.STOP_TIME, 20, 17)
         self.STATE.SCHEDULED_TASKS.append(alarm)
         self.STATE.remove_task(self.TASK_ID)
 
         assert self.STATE.SCHEDULED_TASKS == [alarm]
 
-    def test_remove_light_alarm__should_stop_matching_alarms(self, mock_thread):
+    def test_remove_task__should_stop_matching_alarms(self, mock_thread):
         event = mock.create_autospec(Event)
         my_alarm = mock.create_autospec(MyThread)
         my_alarm.stopped = event

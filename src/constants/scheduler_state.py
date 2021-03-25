@@ -29,6 +29,7 @@ class TaskState:
             existing_task = self.SCHEDULED_TASKS.pop(index)
             existing_task.ACTIVE_THREAD.stopped.set()
 
+
     @staticmethod
     def get_instance():
         if TaskState.__instance is None:
