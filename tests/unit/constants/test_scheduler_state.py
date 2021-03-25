@@ -115,3 +115,12 @@ class TestLightState:
         self.STATE.add_manual_task()
 
         mock_alarm.start.assert_called()
+
+    def test_add_manual_task__should_not_create_new_thread_when_already_manual_thread(self, mock_thread):
+        task_id = str(uuid.uuid4())
+        task = ManualHvacState(task_id)
+        self.STATE.SCHEDULED_TASKS.append(task)
+        self.STATE.add_manual_task()
+
+        assert len(self.STATE.SCHEDULED_TASKS) == 1
+        assert self.STATE.SCHEDULED_TASKS[0].THREAD_ID == task_id
