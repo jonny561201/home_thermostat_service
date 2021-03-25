@@ -8,6 +8,14 @@ from src.utilities.conversion_utils import convert_to_celsius
 class ThreadState:
     ACTIVE_THREAD = None
     THREAD_ID = None
+    IS_MANUAL = False
+
+
+class ManualHvacState(ThreadState):
+
+    def __init__(self, task_id: str):
+        self.IS_MANUAL = True
+        self.THREAD_ID = task_id
 
 
 class AutoHvacState(ThreadState):
