@@ -91,3 +91,10 @@ class TestLightState:
 
         assert len(self.STATE.SCHEDULED_TASKS) == 1
         assert self.STATE.SCHEDULED_TASKS[0].IS_MANUAL is True
+
+    @mock.patch('src.constants.scheduler_state.ManualHvacState')
+    def test_add_manual_task__should_create_the_event_thread(self, mock_state, mock_thread):
+        self.STATE.add_manual_task()
+
+        mock_thread.assert_called_with(mock.ANY, Automation.TIME.ONE_MINUTE)
+        mock_state.assert_called()
