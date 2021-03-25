@@ -60,7 +60,14 @@ class TestLightService:
 
         mock_state.get_instance.return_value.add_hvac_task.assert_not_called()
 
-    def test_schedule_hvac_tasks__should_call_add_alarm(self, mock_tasks, mock_state):
+    def test_schedule_hvac_tasks__should_call_add_manual_task(self, mock_tasks, mock_state):
+        task = {'alarm_days': self.DAYS, 'task_type': self.TYPE, 'hvac_mode': self.MODE, 'hvac_start': self.START, 'hvac_stop': self.STOP, 'task_id': self.TASK_ID, 'enabled': True}
+        mock_tasks.return_value = [task]
+        schedule_hvac_tasks()
+
+        mock_state.get_instance.return_value.add_manual_task.assert_called_with()
+
+    def test_schedule_hvac_tasks__should_call_add_auto_task(self, mock_tasks, mock_state):
         task = {'alarm_days': self.DAYS, 'task_type': self.TYPE, 'hvac_mode': self.MODE, 'hvac_start': self.START, 'hvac_stop': self.STOP, 'task_id': self.TASK_ID, 'enabled': True}
         mock_tasks.return_value = [task]
         schedule_hvac_tasks()
