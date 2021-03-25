@@ -33,7 +33,7 @@ class TaskState:
 
     def add_manual_task(self):
         manual_task = ManualHvacState(str(uuid.uuid4()))
-        create_thread(run_manual_thermostat_program, Automation.TIME.ONE_MINUTE)
+        manual_task.ACTIVE_THREAD = create_thread(run_manual_thermostat_program, Automation.TIME.ONE_MINUTE)
         self.SCHEDULED_TASKS.append(manual_task)
 
     @staticmethod

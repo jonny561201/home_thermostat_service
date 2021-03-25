@@ -5,7 +5,7 @@ import mock
 
 from src.constants.home_automation import Automation
 from src.constants.scheduler_state import TaskState
-from src.constants.thread_state import AutoHvacState
+from src.constants.thread_state import AutoHvacState, ManualHvacState
 from src.utilities.event_utils import MyThread
 
 
@@ -94,7 +94,17 @@ class TestLightState:
 
     @mock.patch('src.constants.scheduler_state.ManualHvacState')
     def test_add_manual_task__should_create_the_event_thread(self, mock_state, mock_thread):
+        thread_id = str(uuid.uuid4())
+        mock_state.return_value = ManualHvacState(thread_id)
         self.STATE.add_manual_task()
 
         mock_thread.assert_called_with(mock.ANY, Automation.TIME.ONE_MINUTE)
         mock_state.assert_called()
+        assert self.STATE.SCHEDULED_TASKS[0].THREAD_ID == thread_id
+
+    def test_add_manual_task__should_store_thread_on_state(self, mock_thread):
+        thread = MyThread(Event(), lambda: print('test'), Automation.TIME.FIVE_SECONDS)
+        mock_thread.return_value = thread
+        self.STATE.add_manual_task()
+
+        assert self.STATE.SCHEDULED_TASKS[0].ACTIVE_THREAD == thread
