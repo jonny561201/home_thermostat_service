@@ -21,7 +21,8 @@ def run_manual_thermostat_program():
 
 def run_auto_thermostat_program(event_state):
     state = get_desired_temp()
-    if state['isAuto']:
+    day_name = datetime.now().strftime('%a')
+    if state['isAuto'] and day_name in event_state.DAYS:
         temp_file = gpio_utils.read_temperature_file()
         celsius_temp = get_user_temperature(temp_file, False)
         mode = __calculate_mode(event_state, celsius_temp)
