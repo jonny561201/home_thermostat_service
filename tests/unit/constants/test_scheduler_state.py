@@ -6,6 +6,7 @@ import mock
 from src.constants.home_automation import Automation
 from src.constants.scheduler_state import TaskState
 from src.constants.thread_state import AutoHvacState, ManualHvacState
+from src.services.thermostat_service import run_manual_thermostat_program
 from src.utilities.event_utils import MyThread
 
 
@@ -98,7 +99,7 @@ class TestLightState:
         mock_state.return_value = ManualHvacState(thread_id)
         self.STATE.add_manual_task()
 
-        mock_thread.assert_called_with(mock.ANY, Automation.TIME.ONE_MINUTE)
+        mock_thread.assert_called_with(run_manual_thermostat_program, Automation.TIME.ONE_MINUTE)
         mock_state.assert_called()
         assert self.STATE.SCHEDULED_TASKS[0].THREAD_ID == thread_id
 

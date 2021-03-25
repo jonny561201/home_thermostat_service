@@ -1,6 +1,5 @@
 import re
 
-
 from src.utilities.conversion_utils import convert_to_fahrenheit
 
 
