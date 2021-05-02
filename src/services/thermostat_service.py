@@ -11,8 +11,9 @@ def run_manual_thermostat_program():
 
     if state['mode'] is not None:
         temp_file = gpio_utils.read_temperature_file()
-        celsius_temp = get_user_temperature(temp_file, False)
-        __run_hvac(celsius_temp, state['mode'], state['desiredTemp'])
+        if temp_file is not None:
+            celsius_temp = get_user_temperature(temp_file, False)
+            __run_hvac(celsius_temp, state['mode'], state['desiredTemp'])
     elif state['isAuto']:
         pass
     else:
