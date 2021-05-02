@@ -25,12 +25,13 @@ def run_auto_thermostat_program(event_state):
     day_name = datetime.now().strftime('%a')
     if state['isAuto'] and day_name in event_state.DAYS:
         temp_file = gpio_utils.read_temperature_file()
-        celsius_temp = get_user_temperature(temp_file, False)
-        mode = __calculate_mode(event_state, celsius_temp)
-        if event_state.START_TIME <= datetime.now().time() < event_state.STOP_TIME:
-            __run_hvac(celsius_temp, mode, event_state.START_TEMP)
-        else:
-            __run_hvac(celsius_temp, mode, event_state.STOP_TEMP)
+        if temp_file is not None:
+            celsius_temp = get_user_temperature(temp_file, False)
+            mode = __calculate_mode(event_state, celsius_temp)
+            if event_state.START_TIME <= datetime.now().time() < event_state.STOP_TIME:
+                __run_hvac(celsius_temp, mode, event_state.START_TEMP)
+            else:
+                __run_hvac(celsius_temp, mode, event_state.STOP_TEMP)
 
 
 def __run_hvac(celsius_temp, mode, desired_temp):

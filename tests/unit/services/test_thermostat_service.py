@@ -166,6 +166,15 @@ class TestAutomaticHvac:
         run_auto_thermostat_program(None)
         mock_gpio.read_temperature_file.assert_not_called()
 
+    def test_run_auto_temperature_program__should_stop_program_when_temp_file_returns_none(self, mock_convert, mock_gpio, mock_file, mock_date, mock_api):
+        mock_file.return_value = self.FILE_DESIRED
+        mock_date.now.return_value = datetime(year=2021, month=2, day=17, hour=8)
+        mock_gpio.read_temperature_file.return_value = None
+        state = AutoHvacState(self.TASK_ID, self.TASK_DAYS, self.START_TIME, self.STOP_TIME, self.START_TEMP, self.STOP_TEMP)
+        run_auto_thermostat_program(state)
+
+        mock_convert.assert_not_called()
+
     def test_run_auto_temperature_program__should_make_call_to_get_daily_high(self, mock_convert, mock_gpio, mock_file, mock_date, mock_api):
         mock_file.return_value = self.FILE_DESIRED
         mock_convert.return_value = 20
