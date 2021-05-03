@@ -31,3 +31,9 @@ def test_get_user_temperature__should_throw_conflict_when_no_temp_text_found():
 
     assert actual == 0.0
 
+
+def test_get_user_temperature__should_return_zero_when_text_file_is_none():
+    actual = get_user_temperature(None, False)
+
+    assert actual == 0.0
+

@@ -4,7 +4,7 @@ from src.utilities.conversion_utils import convert_to_fahrenheit
 
 
 def get_user_temperature(temp_text, is_fahrenheit):
-    if temp_text[0][-3:] != 'YES':
+    if temp_text is None or temp_text[0][-3:] != 'YES':
         return 0.0
     temp_string = re.search('(t=\d*)', temp_text[1])
     if temp_string is None:
