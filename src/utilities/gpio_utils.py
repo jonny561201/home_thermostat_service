@@ -12,6 +12,7 @@ AC_PIN = 11
 BLOWER_PIN = 15
 # second relay
 FURNACE_PIN = 13
+THERMO_PIN = 11
 
 
 # GPIO.cleanup()
@@ -19,6 +20,7 @@ FURNACE_PIN = 13
 # GPIO.setup(AC_PIN, GPIO.OUT)
 # GPIO.setup(FURNACE_PIN, GPIO.OUT)
 # GPIO.setup(BLOWER_PIN, GPIO.OUT)
+# GPIO.setup(THERMO_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 
 def read_temperature_file():
