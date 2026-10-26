@@ -31,7 +31,7 @@ def read_temperature_file():
         with open(os.path.join(device_folder, file_name), 'r', encoding='utf-8') as file:
             return file.read().split("\n")
     except Exception:
-        return None
+        return []
 
 
 def turn_on_hvac(device):

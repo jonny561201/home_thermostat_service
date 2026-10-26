@@ -27,11 +27,12 @@ class TestRunThermostat:
         mock_datetime.now.return_value = now if now is not None else self.MONDAY_NOON
 
     def test_run_thermostat__should_not_touch_relays_when_sensor_reading_missing(self, mock_temp, mock_gpio, mock_file, mock_datetime):
-        mock_gpio.read_temperature_file.return_value = None
+        mock_gpio.read_temperature_file.return_value = []
+        mock_temp.return_value = None
 
         run_thermostat()
 
-        mock_temp.assert_not_called()
+        mock_file.get_desired_state.assert_not_called()
         mock_gpio.turn_on_hvac.assert_not_called()
         mock_gpio.turn_off_hvac.assert_not_called()
 

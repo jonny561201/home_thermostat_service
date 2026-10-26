@@ -7,10 +7,9 @@ from svc.utilities.user_temp_utils import get_user_temperature
 
 
 def run_thermostat():
-    temp_file = gpio_utils.read_temperature_file()
-    if temp_file is None:
+    celsius_temp = get_user_temperature(gpio_utils.read_temperature_file(), False)
+    if celsius_temp is None:
         return
-    celsius_temp = get_user_temperature(temp_file, False)
     state = file_utils.get_desired_state()
     if state['mode'] == Automation.HVAC.MODE.AUTO:
         mode, desired_temp = __resolve_scheduled_target(file_utils.get_schedule(), datetime.now())
