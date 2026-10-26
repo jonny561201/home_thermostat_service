@@ -17,10 +17,12 @@ class TestFileUtils:
         self.DIRECTORY = tempfile.mkdtemp()
         self.STATE_FILE = os.path.join(self.DIRECTORY, 'state.json')
         self.SCHEDULE_FILE = os.path.join(self.DIRECTORY, 'schedule.json')
+        self.API_KEY_FILE = os.path.join(self.DIRECTORY, 'apiKey.json')
 
     def __arrange(self, mock_settings):
         mock_settings.get_instance.return_value.state_file = self.STATE_FILE
         mock_settings.get_instance.return_value.schedule_file = self.SCHEDULE_FILE
+        mock_settings.get_instance.return_value.api_key_file = self.API_KEY_FILE
 
     def test_get_desired_state__should_return_default_when_file_missing(self, mock_settings):
         self.__arrange(mock_settings)
@@ -65,3 +67,15 @@ class TestFileUtils:
         file_utils.save_schedule([])
 
         assert file_utils.get_schedule() == []
+
+    def test_get_api_key__should_return_none_when_file_missing(self, mock_settings):
+        self.__arrange(mock_settings)
+
+        assert file_utils.get_api_key() is None
+
+    def test_save_api_key__should_be_returned_by_get_api_key(self, mock_settings):
+        self.__arrange(mock_settings)
+
+        file_utils.save_api_key('fake-api-key')
+
+        assert file_utils.get_api_key() == 'fake-api-key'

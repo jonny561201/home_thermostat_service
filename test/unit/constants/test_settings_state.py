@@ -2,7 +2,7 @@ from svc.config.settings_state import Settings
 
 
 class TestSettingsState:
-    VALUES = {'StateFile': 'other_state.json', 'ScheduleFile': 'other_schedule.json', 'Environment': 'test'}
+    VALUES = {'StateFile': 'other_state.json', 'ScheduleFile': 'other_schedule.json', 'ApiKeyFile': 'test.json', 'Environment': 'test'}
     QUEUE = {'Host': 'test_host', 'Port': 1234, 'VHost': 'test_vhost', 'Exchange': 'test_exchange'}
 
     def setup_method(self):
@@ -30,6 +30,13 @@ class TestSettingsState:
     def test_schedule_file__should_provide_default(self):
         self.SETTINGS._settings = None
         assert self.SETTINGS.schedule_file == 'thermostatSchedule.json'
+
+    def test_api_key_file__should_return(self):
+        assert self.SETTINGS.api_key_file == self.VALUES['ApiKeyFile']
+
+    def test_api_key_file__should_provide_default(self):
+        self.SETTINGS._settings = None
+        assert self.SETTINGS.api_key_file == 'apiKey.json'
 
     def test_queue_host__should_return(self):
         assert self.SETTINGS.Queue.host == self.QUEUE['Host']

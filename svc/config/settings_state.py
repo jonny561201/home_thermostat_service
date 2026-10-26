@@ -24,6 +24,10 @@ class Settings:
     def schedule_file(self):
         return self._settings.get('ScheduleFile') if self._settings is not None else 'thermostatSchedule.json'
 
+    @property
+    def api_key_file(self):
+        return self._settings.get('ApiKeyFile') if self._settings is not None else 'apiKey.json'
+
     def __get_settings(self):
         environment = os.environ.get('PYTHON_ENVIRONMENT', 'local')
         file_path = os.path.join(os.path.dirname(__file__), '..', '..', f'settings.{environment}.json')

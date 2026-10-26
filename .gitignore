@@ -10,3 +10,5 @@ settings.local.json
 *.log
 *hermostatState.json
 *hermostatSchedule.json
+*apiKey.json
+*_api_key.json

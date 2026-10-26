@@ -4,6 +4,23 @@ from svc.config.settings_state import Settings
 from svc.constants.home_automation import Hvac
 
 
+def get_api_key():
+    file_name = Settings.get_instance().api_key_file
+    try:
+        with open(file_name, 'r+', encoding='utf-8') as file:
+            content = json.load(file)
+        return content['api_key']
+    except FileNotFoundError:
+        return None
+
+
+def save_api_key(api_key):
+    file_name = Settings.get_instance().api_key_file
+    with open(file_name, 'w+', encoding='utf-8') as file:
+        content = {'api_key': api_key}
+        json.dump(content, file)
+
+
 def get_desired_state():
     file_name = Settings.get_instance().state_file
     try:
