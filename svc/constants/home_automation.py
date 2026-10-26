@@ -18,6 +18,7 @@ class Hvac:
     AUTO_BAND = 1.0
     DEFAULT_DESIRED_TEMP = 21.1111
     WATCH_INTERVAL_SECONDS = 60
+    RECONNECT_SECONDS = 5
 
 
 class Time:
