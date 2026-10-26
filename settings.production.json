@@ -1,0 +1,11 @@
+{
+  "Environment": "prod",
+  "StateFile": "/home/pi/thermostat_state.json",
+  "ScheduleFile": "/home/pi/thermostat_schedule.json",
+  "Queue": {
+    "Port": 5672,
+    "Host": "localhost",
+    "VHost": "home-automation-prod",
+    "Exchange": "home-automation"
+  }
+}

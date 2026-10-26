@@ -15,20 +15,20 @@ function cloneServiceFiles {
     else
         echo -e "${YELLOW}---------------Cloning Service---------------${WHITE}"
         cd /home/pi/
-        git clone https://github.com/jonny561201/home_thermostat_service.git
+        git clone https://github.com/jonny561201/home_thermostat_service.git /home/pi/home_thermostat_service
     fi
 }
 
 function startVirtualEnv {
     if [[ ! -d "/home/pi/home_thermostat_service/venv" ]]; then
-      echo -e "${YELLOW}----------Creating VirtualEnv----------${WHITE}"
+      echo -e "${YELLOW}----------Creating VirtualEnv----------"
       pushd "/home/pi/home_thermostat_service"
-      sudo pip3 install virtualenv
+      pip3 install virtualenv
       python3 -m virtualenv venv
       popd
     fi
-      echo -e "${YELLOW}---------------starting VirtualEnv---------------${WHITE}"
-      source /home/pi/home_thermostat_service/venv/bin/activate
+      echo -e "${YELLOW}---------------Starting VirtualEnv---------------${WHITE}"
+      source ./venv/bin/activate
 }
 
 function installDependencies {
@@ -76,11 +76,14 @@ function createEnvironmentVariableFile {
 }
 
 function createFile {
-    echo -e "Enter HUB_BASE_URL:${WHITE}"
-    read HUB_BASE_URL
+    echo -e "Enter Queue Username:${WHITE}"
+    read QUEUE_USERNAME
+    echo -e "Enter Queue Password:${WHITE}"
+    read QUEUE_PASSWORD
 
-    echo "TEMP_FILE_NAME=/home/pi/temperature_settings.json" > serviceEnvVariables
-    echo "HUB_BASE_URL=${HUB_BASE_URL}" >> serviceEnvVariables
+    echo "PYTHON_ENVIRONMENT=production" > serviceEnvVariables
+    echo "QUEUE_USER_NAME=${QUEUE_USERNAME}" >> serviceEnvVariables
+    echo "QUEUE_PASSWORD=${QUEUE_PASSWORD}" >> serviceEnvVariables
 }
 
 

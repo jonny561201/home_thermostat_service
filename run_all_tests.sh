@@ -18,7 +18,7 @@ function runUnitTests {
 }
 
 function runLinuxUnitTests {
-  python3 -m pytest -s ${CURRENT_DIR}/tests/unit
+  python3 -m pytest -s ${CURRENT_DIR}/test/unit
   UNIT_TEST=$?
   if [[ ${UNIT_TEST} -ne 0 ]]; then
       echo -e "${RED}ERROR: Unit Tests Failed!!!${WHITE}"
@@ -27,7 +27,7 @@ function runLinuxUnitTests {
 }
 
 function runWindowsUnitTests {
-  python -m pytest -s ${CURRENT_DIR}/tests/unit
+  python -m pytest -s ${CURRENT_DIR}/test/unit
   UNIT_TEST=$?
   if [[ ${UNIT_TEST} -ne 0 ]]; then
       echo -e "${RED}ERROR: Unit Tests Failed!!!${WHITE}"
@@ -46,7 +46,7 @@ function runIntegrationTests {
 
 function runLinuxIntegrationTests {
     if [ -d "${CURRENT_DIR}/test/integration" ]; then
-      python3 -m pytest -s ${CURRENT_DIR}/tests/integration
+      python3 -m pytest -s ${CURRENT_DIR}/test/integration
       INTEGRATION_EXIT=$?
       if [[ ${INTEGRATION_EXIT} -ne 0 ]]; then
           echo -e "${RED}ERROR: Integration Tests Failed!!!${WHITE}"
@@ -58,7 +58,7 @@ function runLinuxIntegrationTests {
 
 function runWindowsIntegrationTests {
   if [ -d "${CURRENT_DIR}/test/integration" ]; then
-    python -m pytest -s ${CURRENT_DIR}/tests/integration
+    python -m pytest -s ${CURRENT_DIR}/test/integration
     INTEGRATION_EXIT=$?
     if [[ ${INTEGRATION_EXIT} -ne 0 ]]; then
         echo -e "${RED}ERROR: Integration Tests Failed!!!${WHITE}"

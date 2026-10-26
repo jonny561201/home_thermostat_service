@@ -9,7 +9,7 @@
     * stops service if it is running
     * clones repo down if doesnt initially exist
     * does a pip install of all production dependencies
-    * creates environment variable file `/home/pi/home_thermostat_/serviceEnvVariables`
+    * creates environment variable file `/home/pi/home_thermostat_service/serviceEnvVariables`
     * copies `homeThermostat.service` file into systemd
     * registers and configures service
     * reboots the device
@@ -21,8 +21,8 @@
     * create virtual environment: `virtualenv venv`
     * activate virtual environment: `source ./venv/scripts/activate`
     * install production dependencies: `pip install -Ur requirements.txt`
-    * install test dependencies: `pip install -Ur test_requirements.txt`
-2. Create `settings.json` file to substitute test environment variables
+    * install test dependencies: `pip install -Ur requirements_test.txt`
+2. Create `settings.local.json` (same shape as `settings.development.json`) with local queue credentials
 3. Provide any corresponding test coverage in directories `/test/integration` and `/test/unit`
 4. Prior to committing code execute `./run_all_tests.sh`
-5. Stand up application by executing `python app.py`
+5. Stand up application by executing `python local_app.py`

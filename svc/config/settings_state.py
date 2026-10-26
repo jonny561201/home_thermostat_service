@@ -1,0 +1,66 @@
+import json
+import os
+
+from svc.config.singleton import Singleton
+
+
+@Singleton
+class Settings:
+    _settings = None
+
+    def __init__(self):
+        self.__get_settings()
+        self.Queue = Queue(self._settings)
+
+    @property
+    def environment(self):
+        return self._settings.get('Environment') if self._settings is not None else 'local'
+
+    @property
+    def state_file(self):
+        return self._settings.get('StateFile') if self._settings is not None else 'thermostatState.json'
+
+    @property
+    def schedule_file(self):
+        return self._settings.get('ScheduleFile') if self._settings is not None else 'thermostatSchedule.json'
+
+    def __get_settings(self):
+        environment = os.environ.get('PYTHON_ENVIRONMENT', 'local')
+        file_path = os.path.join(os.path.dirname(__file__), '..', '..', f'settings.{environment}.json')
+        with open(file_path, "r") as reader:
+            self._settings = json.loads(reader.read())
+
+
+class Queue:
+
+    def __init__(self, settings):
+        self._settings = settings.get('Queue', {}) if settings is not None else None
+
+    @property
+    def user_name(self):
+        return _get_setting('QUEUE_USER_NAME', 'User', self._settings)
+
+    @property
+    def password(self):
+        return _get_setting('QUEUE_PASSWORD', 'Password', self._settings)
+
+    @property
+    def host(self):
+        return self._settings.get('Host')
+
+    @property
+    def port(self):
+        return self._settings.get('Port')
+
+    @property
+    def vhost(self):
+        return self._settings.get('VHost')
+
+    @property
+    def exchange(self):
+        return self._settings.get('Exchange')
+
+
+def _get_setting(env_var, setting_key, settings):
+    env_var_value = os.environ.get(env_var)
+    return env_var_value if env_var_value is not None else settings.get(setting_key)

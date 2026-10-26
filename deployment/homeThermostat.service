@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 EnvironmentFile=/home/pi/home_thermostat_service/serviceEnvVariables
-ExecStart=/home/pi/home_thermostat_service/venv/bin/python -u app.py
+ExecStart=/home/pi/home_thermostat_service/venv/bin/uwsgi --ini /home/pi/home_thermostat_service/deployment/wsgi.ini
 WorkingDirectory=/home/pi/home_thermostat_service
 Restart=always
 User=pi
