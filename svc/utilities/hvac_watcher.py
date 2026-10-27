@@ -11,6 +11,7 @@ def start_hvac_watcher():
 
 
 def _watch_hvac():
+    thermostat_service.stop_hvac()
     while True:
         thermostat_service.run_thermostat()
         time.sleep(Hvac.WATCH_INTERVAL_SECONDS)
